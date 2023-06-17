@@ -2,8 +2,8 @@
 
 AMPATH="/opt/am"
 AMREPO="https://raw.githubusercontent.com/ivan-hc/AM-application-manager/main"
-arch=$(uname -m)
-currentuser=$(who | awk '{print $1}')
+arch=$(printf '%s\n' "$HOSTTYPE")
+currentuser=$(printf '%s\n' "$USER")
 
 for name in "ar" "cat" "chmod" "chown" "curl" "echo" "egrep" "grep" "sed" "tar" "test" "unzip" "wget" "xterm" "zsync"
 do
@@ -133,7 +133,7 @@ case "$1" in
 	do
 	rm -f $AMPATH/.cache/about-args
 	echo $@ | tr ' ' '\n' >> $AMPATH/.cache/about-args && echo STOP >> $AMPATH/.cache/about-args
-	ARGS=$(sed '1d' $AMPATH/.cache/about-args)
+	ARGS=$(tail +2 $AMPATH/.cache/about-args)
 	for arg in $ARGS; do
 	for var in $arg; do
 	if [ $arg == STOP ]; then
@@ -168,7 +168,7 @@ case "$1" in
 	do
 	rm -f $AMPATH/.cache/backup-args
 	echo $@ | tr ' ' '\n' >> $AMPATH/.cache/backup-args && echo STOP >> $AMPATH/.cache/backup-args
-	ARGS=$(sed '1d' $AMPATH/.cache/backup-args)
+	ARGS=$(tail +2 $AMPATH/.cache/backup-args)
 	for arg in $ARGS; do
 	for var in $arg; do
 	if [ $arg == STOP ]; then
@@ -202,7 +202,7 @@ case "$1" in
 	do
 	rm -f $AMPATH/.cache/download-args
 	echo $@ | tr ' ' '\n' >> $AMPATH/.cache/download-args && echo STOP >> $AMPATH/.cache/download-args
-	ARGS=$(sed '1d' $AMPATH/.cache/download-args)
+	ARGS=$(tail +2 $AMPATH/.cache/download-args)
 	for arg in $ARGS; do
 	for var in $arg; do
 	if [ $arg == STOP ]; then
@@ -233,16 +233,16 @@ case "$1" in
 	shift;;
   '-f'|'files')
     	if [ -n "$SUDO_COMMAND" ]; then echo -e "\n WARNING: You don't need to run the option '$1' with SUDO.\n"; exit; fi
-  	echo ""; echo $(echo "YOU HAVE INSTALLED "; cd /opt && find -name 'remove' -printf "%h\n" | sort -u | wc -l;
+  	echo ""; echo $(echo "YOU HAVE INSTALLED "; cd /opt && find . -type f -name 'remove' | sed -r 's|/[^/]+$||' | sort | uniq | wc -l;
   	echo " STANDALONE PROGRAMS MANAGED BY THE 'AM' COMMAND:"); echo "";
-  	cd /opt && find -name 'remove' -printf "%h\n" | sort -u | echo $(xargs -n 1 basename 2> /dev/null) | du -sh * | awk '{ print " ◆ "$2 " - " $1"iB of disk space used"}'; echo "" ;;
+  	cd /opt && find -name 'remove' -printf "%h\n" | sort -u | echo $(xargs -n 1 basename 2> /dev/null) | du -sh $(find . -type f -name 'remove' | sed -r 's|/[^/]+$||' | sort | uniq | cut -c 3-) | awk '{ print " ◆ "$2 " - " $1"iB of disk space used"}'; echo "" ;;
   '-H'|'--home')
     	if [ -n "$SUDO_COMMAND" ]; then echo -e "\n WARNING: You don't need to run the option '$1' with SUDO.\n"; exit; fi
     	while [ -n "$1" ]
 	do
 	rm -f $AMPATH/.cache/home-args
 	echo $@ | tr ' ' '\n' >> $AMPATH/.cache/home-args && echo STOP >> $AMPATH/.cache/home-args
-	ARGS=$(sed '1d' $AMPATH/.cache/home-args)
+	ARGS=$(tail +2 $AMPATH/.cache/home-args)
 	for arg in $ARGS; do
 	for var in $arg; do
 	if [ $arg == STOP ]; then
@@ -285,7 +285,7 @@ case "$1" in
 	rm -R -f $AMPATH/.cache/installed
 	echo $@ | tr ' ' '\n' >> $AMPATH/.cache/install-args 
 	echo STOP >> $AMPATH/.cache/install-args
-	ARGS=$(sed '1d' $AMPATH/.cache/install-args)
+	ARGS=$(tail +2 $AMPATH/.cache/install-args)
 	for arg in $ARGS; do
 	for var in $arg; do
 	if [ $arg == STOP ]; then
@@ -361,7 +361,7 @@ case "$1" in
 	do
 	rm -f $AMPATH/.cache/overwrite-args
 	echo $@ | tr ' ' '\n' >> $AMPATH/.cache/overwrite-args && echo STOP >> $AMPATH/.cache/overwrite-args
-	ARGS=$(sed '1d' $AMPATH/.cache/overwrite-args)
+	ARGS=$(tail +2 $AMPATH/.cache/overwrite-args)
 	for arg in $ARGS; do
 	for var in $arg; do
 	if [ $arg == STOP ]; then
@@ -413,7 +413,7 @@ case "$1" in
 	do
 	rm -f $AMPATH/.cache/remove-args
 	echo $@ | tr ' ' '\n' >> $AMPATH/.cache/remove-args && echo STOP >> $AMPATH/.cache/remove-args
-	ARGS=$(sed '1d' $AMPATH/.cache/remove-args)
+	ARGS=$(tail +2 $AMPATH/.cache/remove-args)
 	for arg in $ARGS; do
 	for var in $arg; do
 	if [ $arg == STOP ]; then
@@ -443,7 +443,7 @@ case "$1" in
 	do
 	rm -f $AMPATH/.cache/remove-args
 	echo $@ | tr ' ' '\n' >> $AMPATH/.cache/remove-args && echo STOP >> $AMPATH/.cache/remove-args
-	ARGS=$(sed '1d' $AMPATH/.cache/remove-args)
+	ARGS=$(tail +2 $AMPATH/.cache/remove-args)
 	for arg in $ARGS; do
 	for var in $arg; do
 	if [ $arg == STOP ]; then
@@ -477,7 +477,7 @@ case "$1" in
 	do
 	rm -f $AMPATH/.cache/template-args
 	echo $@ | tr ' ' '\n' >> $AMPATH/.cache/template-args && echo STOP >> $AMPATH/.cache/template-args
-	ARGS=$(sed '1d' $AMPATH/.cache/template-args)
+	ARGS=$(tail +2 $AMPATH/.cache/template-args)
 	for arg in $ARGS; do
 	for var in $arg; do
 	if [ $arg == STOP ]; then
@@ -1097,6 +1097,6 @@ case "$1" in
 	done
 	shift;;
   'version'|'-v'|'--version')
-  	echo "4.3.1~1";;
+  	echo "4.3.1~2";;
   *) exec $AMPATH/APP-MANAGER ;;
 esac
