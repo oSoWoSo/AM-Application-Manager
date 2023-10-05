@@ -98,6 +98,7 @@
 ◆ authme : Simple cross-platform two-factor authenticator app for desktop.
 ◆ autoedit2 : autoEdit2 Desktop Client for Linux.
 ◆ avidemux : Multiplatform Video Editor.
+◆ avidemux-nightly : Multiplatform Video Editor (nightly build).
 ◆ avocado : PlayStation 1 emulator (games).
 ◆ avogadro2 : Molecular editor for computational chemistry, bioinformatics.
 ◆ awakened-poe-trade : Path of Exile trading app for price checking.
@@ -516,6 +517,7 @@
 ◆ firetv-toolkit : Android-Toolkit, a GUI for adb, modify android devices.
 ◆ fish : AppImage for `fish` shell.
 ◆ fishing-funds : Fund, big market, stock, virtual currency status (in chinese).
+◆ flacon : Audio File Encoder. Extracts audio tracks from audio CDs.
 ◆ flameshot : Tool to take screenshots with many built-in features (graphics).
 ◆ flare : Fantasy action RPG game using the FLARE engine.
 ◆ flawesome : Flawesome is a modern productivity tool.
