@@ -13,89 +13,117 @@ function _am(){
 	AMPATH="$APPSPATH/$AMCLI"
 }
 
-function _appman(){
-	if test -f ~/.config/appman/appman-config; then
-		break 2>/dev/null
-	else
+function _appman() {
+	# Helper functions defined inside the parent function
+	function prompt_for_directory() {
+		local location
+		read -r -ep "Please, write the name or the path of your custom application's folder: $(echo -e '\n\n '$HOME'/')" location
+		echo "$location"
+	}
+
+	function validate_directory() {
+		local location=$1
+		if [[ "$location" == "" ]]; then
+			echo -e "--------------------------------------------------------------------------"
+			echo "OPERATION ABORTED!"
+			exit  1
+		elif [[ "$location" == ".local/bin" ]]; then
+			echo -e "--------------------------------------------------------------------------\n"
+			echo -e " 💀 ERROR, you can't install applications into a '$PATH'\n\n The directory ~/.local/bin and 'bin' folders are used for executables.\n\n Please, choose a different path and retry! \n"
+			echo -e "--------------------------------------------------------------------------\n"
+			exit  1
+			else
+			local location_appman="${location/#$HOME}"
+			location_appman="${location_appman// /-}"
+			location_appman="${location_appman#/}"
+			location_appman="${location_appman%/}"
+			echo "$location_appman"
+		fi
+	}
+
+	function initialize_appman() {
+		APPSDIR=$1
+		mkdir -p ~/$APPSDIR/appman/.cache
+		mkdir -p ~/.local/bin ~/.local/share/applications ~/.local/share/icons
+		AMCLI="appman"
+		AMCLIPATH="$DIR/$AMCLI"
+		SUDOCOMMAND=""
+		COMPLETIONPATH="$HOME"
+		COMPLETIONFILE=".bash_completion"
+		APPSPATH="$HOME/$APPSDIR"
+		AMPATH="$HOME/$APPSDIR/$AMCLI"
+	}
+
+	# Main execution
+	if [[ ! -f ~/.config/appman/appman-config ]]; then
 		echo "--------------------------------------------------------------------------"
 		echo " >>> Thank you for choosing AppMan!"
 		echo "--------------------------------------------------------------------------"
-		echo " Before proceeding with any task, write the name of the directory in which"
-		echo ' you will install the apps, for example "Programs" or "My-apps", you can '
-		echo ' also choose a subfolder, for example ".local/My-apps" or a deeper path.'
-		echo -e "\n The destination folder will be created in $HOME"
-		echo -e "\n SYNTAX:	PATH/TO/DIRNAME\n"
-		echo ' NOTE, any spaces or "/" at the beginning and end will be removed. If you '
-		echo ' decide to change your choice in the future, first remove all the programs'
-		echo ' and then edit the ~/.config/appman/appman-config text file.'
+		echo "Before proceeding with any task, write the name of the directory in which"
+		echo 'you will install the apps, for example "Programs" or "My-apps", you can '
+		echo 'also choose a subfolder, for example ".local/My-apps" or a deeper path.'
+		echo -e "\nThe destination folder will be created in $HOME"
+		echo -e "\nSYNTAX: PATH/TO/DIRNAME\n"
+		echo 'NOTE, any spaces or "/" at the beginning and end will be removed. If you '
+		echo 'decide to change your choice in the future, first remove all the programs'
+		echo 'and then edit the ~/.config/appman/appman-config text file.'
 		echo -e "--------------------------------------------------------------------------\n"
-		read -r -ep " Please, write the name or the path of your custom application's folder:$(echo -e '\n\n '$HOME'/')" location
-		case $location in
-			'')	echo -e "--------------------------------------------------------------------------"
-				echo " OPERATION ABORTED!"
-				exit;;
-			*)	location_appman=$(echo "$location" | sed 's#'$HOME'##g' | sed 's# #-#g' | sed 's/^\///;s/\/$//' )
-				if [ "$location_appman" == ".local/bin" ]; then
-					echo -e "--------------------------------------------------------------------------\n"
-					echo -e " 💀 ERROR, you can't install applications into a "'$PATH'"\n\n The directory ~/.local/bin and 'bin' folders are used for executables.\n\n Please, choose a different path and retry! \n"
-					echo -e "--------------------------------------------------------------------------\n"
-					exit
-				else
-					mkdir -p ~/.config/appman; echo "$location_appman" >> ~/.config/appman/appman-config
-					echo '--------------------------------------------------------------------------'
-					echo ' You are ready! Start installing your favorite apps locally!!'
-					echo ' All apps will be installed in '$HOME'/'$location_appman''
-					echo -e '\n In case of problems, use the option "-h".'
-					echo '--------------------------------------------------------------------------'
-					exit
-				fi;;
-		esac
+
+		local location=$(prompt_for_directory)
+		local validated_location=$(validate_directory "$location")
+		mkdir -p ~/.config/appman
+		echo "$validated_location" >> ~/.config/appman/appman-config
+		echo '--------------------------------------------------------------------------'
+		echo 'You are ready! Start installing your favorite apps locally!!'
+		echo "All apps will be installed in $HOME/$validated_location"
+		echo -e '\nIn case of problems, use the option "-h".'
+		echo '--------------------------------------------------------------------------'
+	else
+		break  2> /dev/null
 	fi
-	APPSDIR=$(cat ~/.config/appman/appman-config)
-	mkdir -p ~/$APPSDIR/appman/.cache
-	mkdir -p ~/.local/bin ~/.local/share/applications ~/.local/share/icons
-	AMCLI="appman"
-	AMCLIPATH="$DIR/$AMCLI"
-	SUDOCOMMAND=""
-	COMPLETIONPATH="$HOME"
-	COMPLETIONFILE=".bash_completion"
-	APPSPATH="$HOME/$APPSDIR"
-	AMPATH="$HOME/$APPSDIR/$AMCLI"
+	initialize_appman $(<~/.config/appman/appman-config)
 }
 
-if [ "$DIR/$CLI" == "/usr/local/bin/am" ] 2>/dev/null; then
+if [[ "$DIR/$CLI" == "/usr/local/bin/am" ]] 2>/dev/null; then
 	_am
 else
 	_appman
 fi
 
 function _online_check(){
-	wget -q --tries=10 --timeout=20 --spider https://github.com
-	if [[ ! $? -eq 0 ]]; then
-		echo -e '\n '$AMCLI' is offline, please check your internet connection and try again\n'
+	if ! wget -q --tries=10 --timeout=20 --spider https://github.com; then
+		echo -e "\n $AMCLI is offline, please check your internet connection and try again\n"
 		exit
 	fi
 }
 
-if test -f $AMPATH/new-repo.txt; then
-	AMREPO=$(cat $AMPATH/new-repo.txt)
-	if [[ ! "$@" == "newrepo off" ]]; then
-		echo -e '\n WARNING, custom repository ENABLED!\n Use the command "'$AMCLI' newrepo off" to restore the default repo!\n'
+if [[ -f $AMPATH/new-repo.txt ]]; then
+	AMREPO=$(<"$AMPATH/new-repo.txt") # Utilizing command substitution with < for more efficient file reading
+	if [[ "$@" != "newrepo off" ]]; then
+		echo -e "\n WARNING, custom repository ENABLED!\n Use the command '$AMCLI newrepo off' to restore the default repo!\n"
 	fi
 else
-	PROJECT_OWNER="IVAN-HC"
-	PROJECT_NAME="AM"
-	PROJECT_branch="main"
-	AMREPO="https://raw.githubusercontent.com/$PROJECT_OWNER/$PROJECT_NAME/$PROJECT_branch"
+	AMREPO="https://raw.githubusercontent.com/IVAN-HC/AM/main" # Consolidating variable assignments for clarity and brevity
 fi
 
-arch=$(printf '%s\n' "$HOSTTYPE")
-currentuser=$(printf '%s\n' "$USER")
+# Determine system architecture and current user
+arch="$HOSTTYPE"
+currentuser="$USER"
 
-for name in "cat" "chmod" "chown" "curl" "grep" "sed" "wget"; do
-  test -x "$(command -v $name 2>/dev/null)" \
-  || { printf "\n%s\n" 'ERROR: command "'$name'" not found, strongly needed by "'$AMCLI'"!'; deps=1; };
-done; [ "$deps" != "1" ] || { printf "\nInstall the above and try again\n\n"; exit 1; }
+# Check for essential commands required by the application
+missing_deps=()
+for name in cat chmod chown curl grep sed wget; do
+  if ! command -v "$name" &>/dev/null; then
+	printf "\nERROR: command \"%s\" not found, strongly needed by \"%s\"!\n" "$name" "$AMCLI"
+	missing_deps+=("$name")
+  fi
+done
+
+# Exit if any essential command is missing
+if [ ! -z "$missing_deps" ]; then
+  printf "\nMissing essential commands: %s\nInstall the above and try again\n\n" "${missing_deps[*]}"
+  exit 1
+fi
 
 rm -rf "$AMPATH/options"
 cat <<-HEREDOC >> "$AMPATH/options"
@@ -104,8 +132,6 @@ cat <<-HEREDOC >> "$AMPATH/options"
 	backup
 	clean
 	convert
-	dev
-	devmode
 	download
 	files
 	install
@@ -121,6 +147,7 @@ cat <<-HEREDOC >> "$AMPATH/options"
 	unlock
 	update
 	web
+	--debug
 	--disable-completion
 	--enable-completion
 	--firejail
@@ -141,31 +168,39 @@ function _no_sudo(){
 }
 
 function _patch_bashrc_and_profile(){
-	if $(! grep -q 'export PATH=$PATH:$(xdg-user-dir USER)/.local/bin' $HOME/.bashrc); then
-		echo 'export PATH=$(echo $PATH | tr ":" "\n" | grep -v "/.local/bin" | tr "\n" ":" | sed ''s/.$//'')' >> $HOME/.bashrc
-		echo -e 'export PATH=$PATH:$(xdg-user-dir USER)/.local/bin\n' >> $HOME/.bashrc
+	# Check if the custom PATH is not already in .bashrc, then append it (fix - exclamation mark negates the entire command substitution)
+	if ! grep -q 'export PATH=$PATH:$(xdg-user-dir USER)/.local/bin' "$HOME/.bashrc"; then
+		echo 'export PATH=$(echo $PATH | tr ":" "\n" | grep -v "/.local/bin" | tr "\n" ":" | sed ''s/.$//'')' >> "$HOME/.bashrc"
+		echo -e 'export PATH=$PATH:$(xdg-user-dir USER)/.local/bin\n' >> "$HOME/.bashrc"
 	fi
-	if $( grep -q 'PATH="$HOME/.local/bin:$PATH"' $HOME/.profile); then
-		sed -i 's#PATH="$HOME/.local/bin:$PATH"#PATH="$PATH:$HOME/.local/bin"#g' $HOME/.profile
+	# Correct the order of .local/bin in .profile if necessary
+	if grep -q 'PATH="$HOME/.local/bin:$PATH"' "$HOME/.profile"; then
+		sed -i 's#PATH="$HOME/.local/bin:$PATH"#PATH="$PATH:$HOME/.local/bin"#g' "$HOME/.profile"
 	fi
 }
 
-if [ $AMCLI == appman ] 2>/dev/null; then
+# Check if the script is called with 'appman' and if so, perform initial setup
+[ "$AMCLI" = "appman" ] && {
 	_no_sudo
 	_patch_bashrc_and_profile
-fi
+}
 
-if test -f $AMPATH/ghapikey.txt; then
-		HeaderAuthWithGITPAT=' --header "Authorization: token '$(cat $AMPATH/ghapikey.txt)'" '
-fi
+# Set header authorization if GitHub API key file exists
+[ -f "$AMPATH/ghapikey.txt" ] && HeaderAuthWithGITPAT=" --header \"Authorization: token $(<"$AMPATH/ghapikey.txt")\" "
 
 function _completion_lists(){
-	rm -R -f $AMPATH/$arch-apps $AMPATH/list $AMPATH/libs-list &&
+	# Remove existing lists and download new ones
+	rm -Rf $AMPATH/{$arch-apps,list,libs-list} &&
 	wget -q $AMREPO/programs/$arch-apps -P $AMPATH &&
-	wget -q $AMREPO/libraries/libs-list -P $AMPATH &&
-	echo -e "$(awk -v FS="(◆ | : )" '{print $2}' 0<$AMPATH/$arch-apps)" >> $AMPATH/list
-	echo -e "$(awk -v FS="(◆ | : )" '{print $2}' 0<$AMPATH/libs-list)" >> $AMPATH/list
-	cd $AMPATH && cat options >> list
+	wget -q $AMREPO/libraries/libs-list -P $AMPATH
+	
+	# Extract and append program and library names to the list
+	for file in $arch-apps libs-list; do
+		awk -v FS="(◆ | : )" '{print $2}' <$AMPATH/$file >> $AMPATH/list
+	done
+	
+	# Append options to the list
+	cat $AMPATH/options >> $AMPATH/list
 }
 
 case "$1" in
@@ -282,9 +317,14 @@ case "$1" in
  -i, install
  
  SYNOPSIS:	-i {PROGRAM}
+ 		-i --debug {PROGRAM}
  		-i --force-latest {PROGRAM}
  
- DESCRIPTION:	Install one or more programs (see also "--force-latest").
+ DESCRIPTION:	Install one or more programs or libraries from the list.
+ 
+ With the "--debug" option you can see log messages to debug the script.
+ 
+ For more details on "--force-latest", see the dedicated option, below.
  __________________________________________________________________________
  
  -l, list
@@ -425,17 +465,6 @@ case "$1" in
  
  Use the command "'$AMCLI' apikey delete/del/remove" to remove the file.
  __________________________________________________________________________
- 
- dev, devmode
- 
- SYNOPSIS:	dev off
- 		dev on
- 
- DESCRIPTION:	View the installer output during installation, use "on". 
- 
- It can be disabled with "off" or with the "-s" and "-u" options.
- __________________________________________________________________________
- 
  
  lock
  
@@ -978,7 +1007,7 @@ case "$1" in
 					echo ""
 					case $arg in
 
-					'--force-latest')	;;
+					'--debug'|'--force-latest')	;;
 					*) 
 						function _install_arg(){
 							case $arg in
@@ -1022,7 +1051,9 @@ case "$1" in
 									fi
 
 									function _install_common_patch(){
-										sed -i "s#wget #wget -q --no-verbose --show-progress --progress=dot:mega #g" ./$arg; sed -i 's#$(wget -q --no-verbose --show-progress --progress=dot:mega #$(wget -q #g' ./$arg; sed -i "s# -q -q # -q #g" ./$arg
+										if ! grep -q -- "--debug" $AMPATH/.cache/install-args; then
+											sed -i "s#wget #wget -q --no-verbose --show-progress --progress=dot:mega #g" ./$arg; sed -i 's#$(wget -q --no-verbose --show-progress --progress=dot:mega #$(wget -q #g' ./$arg; sed -i "s# -q -q # -q #g" ./$arg
+										fi
 										sed -i 's/currentuser=/#currentuser=/g' ./$arg
 										sed -i 's/chown -R $currentuser/#chown -R $currentuser/g' ./$arg
 										sed -i '/# MESSAGE/,$d' ./$arg
@@ -1066,7 +1097,11 @@ case "$1" in
 										esac	
 									fi
 
-									$SUDOCOMMAND ./$arg 2>&1 | grep -v ": "
+									if grep -q -- "--debug" $AMPATH/.cache/install-args; then
+										$SUDOCOMMAND ./$arg
+									else
+										$SUDOCOMMAND ./$arg 2>&1 | grep -v ": "
+									fi
 
 									echo -ne " Configuring $(echo '"'$arg'"' | tr a-z A-Z)...\r" && echo -ne "                                                                          \r" &&
 									$SUDOCOMMAND chown -R $currentuser $APPSPATH/$(cd $APPSPATH && ls -td * | head -1) 2> /dev/null
@@ -2585,44 +2620,6 @@ case "$1" in
 	shift
 	;;
 
-  'dev'|'devmode')
-
-	_no_sudo
-	_online_check
-
-	while [ -n "$1" ]; do
-		case $2 in
-		on)
-			if [ $AMCLI == am ] 2>/dev/null; then
-				sed -i 's#$SUDOCOMMAND ./$arg 2>&1 | grep -v ": "#$SUDOCOMMAND ./$arg #g' $AMPATH/APP-MANAGER
-			else
-				sed -i 's#$SUDOCOMMAND ./$arg 2>&1 | grep -v ": "#$SUDOCOMMAND ./$arg #g' $DIR/appman
-			fi
-			echo " Developer Mode is ENABLED!"
-			exit;;
-		off)
-			cd $AMPATH/.cache
-			if [ $AMCLI == am ] 2>/dev/null; then
-	  			wget -q $AMREPO/APP-MANAGER && chmod a+x ./APP-MANAGER
-	  			cd ..
-	  			mv $AMPATH/.cache/APP-MANAGER $AMPATH; chmod 777 $AMPATH
-	  		else
-	  			wget -q $AMREPO/APP-MANAGER -O appman && chmod a+x ./$AMCLI
-	  			cd ..
-	  			mv $AMPATH/.cache/$AMCLI $AMCLIPATH
-	  		fi
-			echo " Developer Mode is DISABLED!"
-			exit;;
-		''|*)
-			echo -e " USAGE: $AMCLI $1 off	(to disable Developer Mode)\n        $AMCLI $1 on	(to enable Developer Mode)"
-			exit
-			;;
-		esac
-	done
-
-	shift
-	;;
-
   'lock')
 
 	_no_sudo
@@ -2869,7 +2866,7 @@ case "$1" in
 
   'version'|'-v'|'--version')
 
-  	echo "5.8-1";;
+  	echo "5.8.1";;
 
   *) exec $AMCLIPATH ;;
 
