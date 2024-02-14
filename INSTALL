@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # CREATING THE MAIN FOLDER FOR "AM"
-mkdir /opt/am /opt/am/.cache /opt/am/modules
+mkdir -p /opt/am/.cache /opt/am/modules
 cd /opt/am
 
 # CREATE THE SCRIPT NEEDED TO UNINSTALL "AM"
@@ -19,7 +19,7 @@ ln -s /opt/am/APP-MANAGER /usr/local/bin/am
 
 # DOWNLOAD THE LIST OF THE AVAILABLE PROGRAMS
 arch=$(uname -m)
-wget -q https://raw.githubusercontent.com/ivan-hc/AM-application-manager/main/programs/$arch-apps
+wget -q "https://raw.githubusercontent.com/ivan-hc/AM-application-manager/main/programs/$arch-apps"
 
 # DOWNLOAD MODULES
 MODULES=$(wget -q https://api.github.com/repos/ivan-hc/AM/contents/modules -O - | grep download_url | cut -d '"' -f 4)
