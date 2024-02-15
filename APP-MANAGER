@@ -212,7 +212,7 @@ case "$1" in
 		chmod a+x $AMPATH/modules/help.am
 	fi
 
-	$AMPATH/modules/help.am
+	source $AMPATH/modules/help.am
   	;;
 
   '-a'|'about')
@@ -220,12 +220,12 @@ case "$1" in
 	_no_sudo
 	_online_check
 
-	if ! test -f $AMPATH/modules/about.am; then
+	[[ -f $AMPATH/modules/about.am ]] || {
 		wget -q $AMREPO/modules/about.am -O $AMPATH/modules/about.am
 		chmod a+x $AMPATH/modules/about.am
-	fi
+	}
 
-	$AMPATH/modules/about.am "$@"
+	source $AMPATH/modules/about.am "$@"
 	;;
 
   '-b'|'backup')
@@ -237,7 +237,7 @@ case "$1" in
 		chmod a+x $AMPATH/modules/backup.am
 	fi
 
-	$AMPATH/modules/backup.am "$@"
+	source $AMPATH/modules/backup.am "$@"
 	;;
 
   '-c'|'clean')
