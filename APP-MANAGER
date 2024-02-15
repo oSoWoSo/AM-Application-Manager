@@ -200,6 +200,7 @@ export COMPLETIONPATH=$COMPLETIONPATH
 export SUDOCOMMAND=$SUDOCOMMAND
 export arch=$arch
 export currentuser=$currentuser
+export HeaderAuthWithGITPAT=$HeaderAuthWithGITPAT
 
 case "$1" in
 
@@ -220,12 +221,12 @@ case "$1" in
 	_no_sudo
 	_online_check
 
-	if ! test -f $AMPATH/modules/about.am; then
+	[[ -f $AMPATH/modules/about.am ]] || {
 		wget -q $AMREPO/modules/about.am -O $AMPATH/modules/about.am
 		chmod a+x $AMPATH/modules/about.am
-	fi
+	}
 
-	$AMPATH/modules/about.am "$@"
+	source $AMPATH/modules/about.am "$@"
 	;;
 
   '-b'|'backup')
