@@ -228,6 +228,7 @@
 ◆ cate-desktop : GUI for the ESA CCI Toolbox (Cate).
 ◆ cavoke : Cavoke: Platform to create/host multiplayer turn-based board games.
 ◆ cbetar2 : ePub viewer supporting fetching and displaying HTML as ePub.
+◆ celeste64 : A game made by the Celeste developers.
 ◆ celestia-dev : Real time 3D space simulator (developer edition).
 ◆ celestia-enanched : An enhanced 1.6.2.2 version of the 3D space visualizer.
 ◆ celestia : Real time 3D space simulator.
@@ -745,6 +746,7 @@
 ◆ jetbrains-toolbox : Essential tools for software developers and teams.
 ◆ jexiftoolgui : Java/Swing graphical frontend for ExifTool.
 ◆ jfcord : An Jellyfin rich presence client for Discord.
+◆ jgrasp : An IDE with Visualizations for Improving Software Comprehensibility.
 ◆ jimud : MUD client for ShadowMUD.com, based on webclient.
 ◆ jira-timer : Menubar app for JIRA time logging.
 ◆ jitsi-meet : Jitsi Meet Desktop App.
@@ -956,7 +958,10 @@
 ◆ memocast : Yet another elegant Wiz Note Client.
 ◆ mendeley : Search over 100 million cross-publisher articles and counting.
 ◆ meow-sql : An attempt to port HeidiSQL to C++/Qt (Linux/Windows).
+◆ mercury-avx2 : Firefox fork, with compiler optim. and patches from Librewolf.
 ◆ mercury : Firefox fork with compiler optimizations and patches from Librewolf.
+◆ mercury-sse3 : Firefox fork with compiler optim. and patches from Librewolf.
+◆ mercury-sse4 : Firefox fork with compiler optim. and patches from Librewolf.
 ◆ meshlab : Processor and editor of large 3D triangular meshes.
 ◆ meshmill : The world's greatest open source 3D CAM software (maybe one day).
 ◆ meta-grabber : A tool to grab metadata for tv shows and rename files on PC.
@@ -1097,6 +1102,7 @@
 ◆ nx-software-center : A GUI to install and manage AppImages (Nitrux OS).
 ◆ nychess : A python Chess Engine and AI.
 ◆ nym-wallet-appimage : Use the Nym network and take advantage of it.
+◆ nyrna : Suspend games and applications.
 ◆ obsidian : A powerful knowledge base, plain text Markdown files.
 ◆ obs-studio : Software for video recording and live streaming (ArchImage).
 ◆ ocat : OpenCore Auxiliary Tools, editing config.plist files for Acidanthera.
@@ -1382,6 +1388,7 @@
 ◆ redminetimetracker : Time Tracking tool for Redmine.
 ◆ reliefvalve : Helps manage the Steam client application.
 ◆ remnote : Build your Knowledge Base anywhere and without distractions.
+◆ reor : AI note-taking app that runs models locally.
 ◆ responsively : A browser for developing responsive web apps.
 ◆ retroarch : Frontend for emulators, game engines and media players.
 ◆ retroshare : Securely share files with your friends.
@@ -1390,6 +1397,7 @@
 ◆ rhb : Rapid HTML Builder/Prototyper.
 ◆ rhythmbox : ArchImage for the Audio Player Rhythmbox.
 ◆ ricochet : Anonymous peer-to-peer instant messaging.
+◆ ricochlime : Satisfying slime shooter.
 ◆ ridereceipts : Automation app to download and organize your tax invoices.
 ◆ ripcord : Chat client for group-centric services like Slack and Discord.
 ◆ ripes : Graphical processor simulator and assembly editor for the RISC-V ISA.
@@ -1634,6 +1642,7 @@
 ◆ thorium-avx2 : AVX2 Linux builds of Thorium Browser.
 ◆ thorium-client : A locked-down electron kiosk for Thorium.
 ◆ thorium-reader : Desktop application to read ebooks.
+◆ thorium-sse3 : Web Browser, Chromium fork with Widevine and FFmpeg support.
 ◆ thorium : Web Browser, a Chromium fork including Widevine and FFmpeg support.
 ◆ thunderbird-appimage : Mail client's Unofficial AppImage (Stable).
 ◆ thunderbird-beta-appimage : Mail client's Unofficial AppImage (Beta).
@@ -1720,6 +1729,7 @@
 ◆ vechain : A browser that empowers DApps on VeChain.
 ◆ ventoy : Tool to create bootable USB drive for ISO/WIM/IMG/VHD(x)/EFI files.
 ◆ verto : A multi-currency crypto wallet with support for EOS & VTX.
+◆ vesktop : Vesktop gives you the performance of web Discord.
 ◆ vessel : A simple wallet for managing your Steem accounts.
 ◆ vgmtrans : A tool to convert proprietary, sequenced videogame music.
 ◆ vhc-viewer-wayland : Vulkan Hardware Capability Viewer.
