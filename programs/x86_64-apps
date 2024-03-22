@@ -12,6 +12,7 @@
 ◆ admin-tools : Administrative tools.
 ◆ advanced-passgen : Advanced Password Generator.
 ◆ advanced-rest-client : Advanced REST Client and API console (by Mulesoft).
+◆ agregore : A minimal browser for the distributed web (Desktop version).
 ◆ ai-bot-workspace : Electron app including testing workspaces.
 ◆ aillio-ts : The desktop application for Aillio Bullet R1.
 ◆ air-controller-desktop : Android phone assistant,powered by Flutter.
@@ -235,7 +236,7 @@
 ◆ cbetar2 : ePub viewer supporting fetching and displaying HTML as ePub.
 ◆ celeste64 : A game made by the Celeste developers.
 ◆ celestia-dev : Real time 3D space simulator (developer edition).
-◆ celestia-enanched : An enhanced 1.6.2.2 version of the 3D space visualizer.
+◆ celestia-enanched : Real-time 3D space simulator with extra detailed maps.
 ◆ celestia : Real time 3D space simulator.
 ◆ celoterminal-bin : Celo Terminal (AppImage version).
 ◆ cemu : A Nintendo Wii U emulator that is able to run most Wii U games.
