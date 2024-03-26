@@ -43,8 +43,15 @@ while [ -n "$1" ]; do
 							[Yy]*|* )	rm -R -f ./$2.old; exit;
 						esac
 					else
-						metainfodir=$(find ./squashfs-root -type d -name metainfo | grep "share/metainfo")
-						rm -R -f "$metainfodir"/*
+						metainfodir=$(find ./squashfs-root -type d -name metainfo | grep "share/metainfo" | head -1)
+						if [ -z "$metainfodir" ]; then
+							echo " 💀Errors while trying to export $(echo $2 | tr a-z A-Z) from Type2 AppImage. Aborted."
+							rm -R -f ./appimagetool ./squashfs-root; exit
+						else
+							cd "$metainfodir"
+							rm -R -f ./*.xml
+							cd - > /dev/null
+						fi
 						echo -ne " ...found Appstream errors, I'm trying to fix them...\r"
 						ARCH="$(uname -m)" VERSION=$(./appimagetool -v | grep -o '[[:digit:]]*') ./appimagetool -s ./squashfs-root > /dev/null 2> /dev/null
 						if test -f ./*.AppImage; then
