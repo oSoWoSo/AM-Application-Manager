@@ -237,6 +237,7 @@ A warning message will prevent you from using "AM"/"AppMan" if the following pac
 - "`grep`", to check files;
 - "`sed`", to edit/adapt installed files;
 - "`wget`" to download all programs and update "AM"/AppMan itself;
+- "`xdg-user-dirs`" to download or manage files in well known local folders;
 
 - "`sudo`" (only required by "AM")
 
@@ -466,15 +467,6 @@ to have a list of the installed programs use the option `-f` or `files` (syntax 
  `-v`
  
  DESCRIPTION:	Shows the version.
- ___________________________________________________________________________
- 
- `-w`, `web`
- 
- SYNOPSIS:
-
- `-w`
- 
- DESCRIPTION:	Shows the URLs of the sites/sources of then app.
  ___________________________________________________________________________
  
  `--disable-completion`
@@ -710,7 +702,8 @@ First the selected program type is checked, if it is a Type2 AppImage, it will b
 
 NOTE, the conversion is not always successful, a lot depends on how the program is packaged. The conversion occurs in two steps:
 - if in the first case it succeeds without problems, the package will be repackaged as it was, but of Type 3 (and the AM-updater script will be patched if a .zsync file doesn't exist);
-- if the script encounters problems (due to Appstream validation), the process will end with an error and the AppImage will remain Type2.
+- if the script encounters problems (due to Appstream validation), it will attempt to delete the contents of the /usr/share/metainfo directory inside the AppImage, as a workaround (which will probably make updates via `zsync` unusable);
+- if this step does not succeed either, the process will end with an error and the AppImage will remain Type2.
 
 See the video:
 

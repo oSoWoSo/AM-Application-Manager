@@ -8,16 +8,17 @@ while [ -n "$1" ]; do
 	*) 
 		cd $APPSPATH &&
 		if test -f ./$2/$2 2>/dev/null; then
-			cd ./$2
-			if [ -z $(strings -d "./$2" 2>/dev/null | grep -F 'appimage-help                 Print this help') ] 2>/dev/null; then
+			cd ./$2 || return
+			if [ -z "$(strings -d "./$2" 2>/dev/null | grep -F 'appimage-help                 Print this help')" ] 2>/dev/null; then
 				echo " ⚠️ Error: $(echo $2 | tr a-z A-Z) is NOT an AppImage."; exit
 			else
-				if [ -z $(strings -d "./$2" 2>/dev/null | grep -F 'AppImages require FUSE to run') ] 2>/dev/null; then
+				if [ -z "$(strings -d "./$2" 2>/dev/null | grep -F 'AppImages require FUSE to run')" ] 2>/dev/null; then
 					echo " ◆ $(echo $2 | tr a-z A-Z) is already a Type3 AppImage."; exit
 				else
-					wget -q $(wget -q $HeaderAuthWithGITPAT https://api.github.com/repos/probonopd/go-appimage/releases -O - | grep -v zsync | grep -i continuous | grep -i appimagetool | grep -i "$(uname -m)" | grep browser_download_url | cut -d '"' -f 4 | head -1) -O appimagetool
+					wget -q "$(wget -q $HeaderAuthWithGITPAT https://api.github.com/repos/probonopd/go-appimage/releases -O - | grep -v zsync | grep -i continuous | grep -i appimagetool | grep -i "$(uname -m)" | grep browser_download_url | cut -d '"' -f 4 | head -1)" -O appimagetool
 					chmod a+x ./appimagetool
-					./$2 --appimage-extract | grep -v "squashfs-root" | echo -ne " ...extracting the AppImage\r"
+					echo -ne " ...extracting the AppImage\r"
+					./$2 --appimage-extract 2> /dev/null | grep -v "squashfs-root"
 					echo -ne " ...trying to convert in Type3 AppImage\r"
 					ARCH="$(uname -m)" VERSION=$(./appimagetool -v | grep -o '[[:digit:]]*') ./appimagetool -s ./squashfs-root > /dev/null 2> /dev/null
 					if test -f ./*.AppImage; then
@@ -43,8 +44,36 @@ while [ -n "$1" ]; do
 							[Yy]*|* )	rm -R -f ./$2.old; exit;
 						esac
 					else
-						echo " 💀Errors while trying to export $(echo $2 | tr a-z A-Z) from Type2 AppImage. Aborted."
-						rm -R -f ./appimagetool ./squashfs-root; exit
+						metainfodir=$(find ./squashfs-root -type d -name metainfo | grep "share/metainfo" | head -1)
+						if [ -z "$metainfodir" ]; then
+							echo " 💀Errors while trying to export $(echo $2 | tr a-z A-Z) from Type2 AppImage. Aborted."
+							rm -R -f ./appimagetool ./squashfs-root; exit
+						else
+							cd "$metainfodir" || return
+							rm -R -f ./*.xml
+							cd - > /dev/null || return
+						fi
+						echo -ne " ...found Appstream errors, I'm trying to fix them...\r"
+						ARCH="$(uname -m)" VERSION=$(./appimagetool -v | grep -o '[[:digit:]]*') ./appimagetool -s ./squashfs-root > /dev/null 2> /dev/null
+						if test -f ./*.AppImage; then
+							mv ./"$2" ./"$2".old
+							mv ./*.AppImage ./"$2"
+							echo " ◆ $(echo $2 | tr a-z A-Z) has been converted to Type3 AppImage."
+							if test -f ./*.zsync; then
+								echo 'However, when trying again I had to remove some files to update with "zsync".'
+							fi
+							echo " Contact the upstream developers to make them officially switch to Type3!"
+							echo ""
+							rm -R -f ./appimagetool ./squashfs-root
+							read -p " Do you wish to remove the old one (Y,n)?" yn
+							case $yn in
+								[Nn]* )		exit;;
+								[Yy]*|* )	rm -R -f ./$2.old; exit;
+							esac
+						else
+							echo " 💀Errors while trying to export $(echo $2 | tr a-z A-Z) from Type2 AppImage. Aborted."
+							rm -R -f ./appimagetool ./squashfs-root; exit
+						fi
 					fi	
 				fi
 			fi

@@ -29,6 +29,7 @@
 ◆ altus : Client for WhatsApp Web with themes & multiple account support.
 ◆ alvr-appimage : Stream VR games from your PC to your headset via Wi-Fi.
 ◆ amazingmarvin-appimage : Incorporates principles from behavioral psychology.
+◆ amdgpu-top : Tool to display AMDGPU usage.
 ◆ amusiz : Unofficial and unpretentious Amazon Music client.
 ◆ anavis : Tool to visualize musical form.
 ◆ anchor : An EOSIO Light Wallet with simple and advanced tools.
@@ -111,7 +112,7 @@
 ◆ axolotl : A Signal compatible cross plattform client written in Go and Vuejs.
 ◆ baijimangaviewer : Manga viewer that uses Material Design.
 ◆ bambustudio : PC Software for BambuLab's 3D printers.
-◆ baobab3 : Disk Usage Analyser (version 3.38, for all GNOME4+ haters).
+◆ baobab-gtk3 : Disk Usage Analyser (version 3.38, for all GNOME4+ haters).
 ◆ bastyon : Decentralized social network based on the blockchain.
 ◆ batch-explorer : A client tool to create/debug/monitor Azure Batch Apps.
 ◆ bauh : GUI for managing AppImage, Arch/AUR, DEBs, Flatpak, Snap and webapps.
@@ -1088,6 +1089,7 @@
 ◆ nanosaur2 : Pangea Software’s Nanosaur II for modern systems.
 ◆ nanosaur : Pangea Software’s game, adventure of a cybernetic dinosaur.
 ◆ nanovault : Wallet for interacting with Nano.
+◆ naruto-arena : Naruto-based online multiplayer strategy game.
 ◆ nault-bin : Official Nault AppImage client.
 ◆ ncsa-mosaic : One of the first graphical web browsers.
 ◆ neanes : A scorewriter for notating Byzantine chant in Byzantine notation.
@@ -1573,6 +1575,7 @@
 ◆ sonicvisualiser : Viewing and analysing the contents of music audio files.
 ◆ sonist : Music Player.
 ◆ sonixd : A full-featured Subsonic/Jellyfin compatible desktop music player.
+◆ soul-arena : Bleach-based online multiplayer strategy game.
 ◆ sourcetrail : Source explorer to get you productive on unfamiliar source code.
 ◆ spacecadet : Reverse engineered port of 3D Pinball for Windows XP Space Cadet.
 ◆ spacemesh : Spacemesh App (Smesher + Wallet).
@@ -1936,6 +1939,7 @@
 ◆ yuna : Anime player integrated with AniList, Crunchyroll, and Hidive.
 ◆ yuview : YUV player with an advanced analytic toolset.
 ◆ yuzu : An experimental open-source emulator for the Nintendo Switch.
+◆ yuzu : Open-source, Nintendo Switch emulator.
 ◆ zap : Delightful command line AppImage package manager for appimage.github.io.
 ◆ zapdesktop : Desktop application for the lightning network.
 ◆ zegarek : A simple clock with millisecond resolution.
