@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function _clean_launchers(){
-	for var in $HOME/.local/share/applications/AppImages/*.desktop; do
+	for var in "$HOME"/.local/share/applications/AppImages/*.desktop; do
 		APPIMAGENAME=$(grep "Exec=" 0<"$var" 2>/dev/null | head -1 | cut -c 6- | sed 's/\s.*$//')
 		MOUNTPOINTS=$(echo "$APPIMAGENAME" | cut -d'/' -f1-4)
 		if ! test -f "$APPIMAGENAME" 2> /dev/null; then
@@ -13,7 +13,22 @@ function _clean_launchers(){
 				fi
 			else
 				rm -f "$var"
+				rm -f "$HOME"/.local/bin/"$(basename -- "$(echo "$APPIMAGENAME" | tr A-Z a-z)")"*
+				cd "$HOME"/.local/bin && find . -xtype l -delete
 			fi
+		fi
+	done
+}
+
+function _clean_old_modules(){
+	if [ $AMCLI == am ] 2>/dev/null; then
+		MODULES=$(cat /opt/am/APP-MANAGER | grep -Eo '\S*.am\S*' | grep 'modules' | sed 's@.*/@@' | grep -v ";" | grep ".am" | uniq | sort)
+	else
+		MODULES=$(cat "$AMCLIPATH" | grep -Eo '\S*.am\S*' | grep 'modules' | sed 's@.*/@@' | grep -v ";" | grep ".am" | uniq | sort)
+	fi
+	for m in "$APPSPATH"/"$AMCLI"/modules/*; do
+		if [[ "${MODULES}" != *"$(basename -- "$m")"* ]];then
+			rm -f "$m"
 		fi
 	done
 }
@@ -23,11 +38,12 @@ function _clean_all(){
 	for i in {1000..0000}; do 
 		echo -ne " $i\r" && sleep 0.0001
 	done
-	rm -R -f "$AMPATH"/.cache/* | echo " ◆ Cleaning up the content of $AMPATH/.cache"
-	rm -R -f "$APPSPATH"/*/tmp | echo ' ◆ Removed all '"$APPSPATH"'/*/tmp directories'
-	if test -f "$HOME"/.local/share/applications/AppImages/*.desktop; then
+	rm -R -f "$AMPATH"/.cache/* && echo " ◆ Cleaning up the content of $AMPATH/.cache"
+	rm -R -f "$APPSPATH"/*/tmp && echo ' ◆ Removed all '"$APPSPATH"'/*/tmp directories'
+	if test -f "$HOME"/.local/share/applications/AppImages/*.desktop 2> /dev/null; then
 		_clean_launchers && echo ' ◆ Removed orphaned launchers produced with the "--launcher" option'
 	fi
+	_clean_old_modules && echo ' ◆ Removed obsolete modules'
 	echo -e "\n DONE!\n"
 }
 

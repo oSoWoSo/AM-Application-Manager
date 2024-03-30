@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 DIR="$( cd "$( dirname "$0" )" && pwd )"
-CLI=$(echo $(basename "$0"))
+CLI=$(echo "$(basename "$0")")
+
+if ! command -v xdg-user-dir 1>/dev/null; then echo ' ⚠️ WARNING: "xdg-user-dir" command not found (required by modules)'; exit; fi
 
 function _am(){
 	AMCLI="am"
@@ -57,8 +59,14 @@ function _appman() {
 		AMPATH="$HOME/$APPSDIR/$AMCLI"
 	}
 
+	# Check XDG varaible
+	if [ -n "$XDG_CONFIG_HOME" ]; then
+		APPMANCONFIG="$XDG_CONFIG_HOME/appman"
+	else
+		APPMANCONFIG="$HOME/.config/appman"
+	fi
 	# Main execution
-	if [[ ! -f ~/.config/appman/appman-config ]]; then
+	if [[ ! -f "$APPMANCONFIG"/appman-config ]]; then
 		echo "--------------------------------------------------------------------------"
 		echo " >>> Thank you for choosing AppMan!"
 		echo "--------------------------------------------------------------------------"
@@ -74,15 +82,15 @@ function _appman() {
 
 		local location=$(prompt_for_directory)
 		local validated_location=$(validate_directory "$location")
-		mkdir -p ~/.config/appman
-		echo "$validated_location" >> ~/.config/appman/appman-config
+		mkdir -p "$APPMANCONFIG"
+		echo "$validated_location" >> "$APPMANCONFIG"/appman-config
 		echo '--------------------------------------------------------------------------'
 		echo 'You are ready! Start installing your favorite apps locally!!'
 		echo "All apps will be installed in $HOME/$validated_location"
 		echo -e '\nIn case of problems, use the option "-h".'
 		echo '--------------------------------------------------------------------------'
 	fi
-	initialize_appman $(<~/.config/appman/appman-config)
+	initialize_appman "$(<"$APPMANCONFIG"/appman-config)"
 }
 
 if [[ "$DIR/$CLI" == "/usr/local/bin/am" ]] 2>/dev/null; then
@@ -226,16 +234,16 @@ case "$1" in
 	source $AMPATH/modules/about.am "$@"
 	;;
 
-  '-b'|'backup')
+  '-b'|'backup'|'-o'|'overvrite'|'lock'|'unlock')
 
 	_no_sudo
 
-	if ! test -f $AMPATH/modules/backup.am; then
-		wget -q $AMREPO/modules/backup.am -O $AMPATH/modules/backup.am
-		chmod a+x $AMPATH/modules/backup.am
+	if ! test -f $AMPATH/modules/update-block.am; then
+		wget -q $AMREPO/modules/update-block.am -O $AMPATH/modules/update-block.am
+		chmod a+x $AMPATH/modules/update-block.am
 	fi
 
-	source $AMPATH/modules/backup.am "$@"
+	source $AMPATH/modules/update-block.am "$@"
 	;;
 
   '-c'|'clean')
@@ -275,16 +283,16 @@ case "$1" in
 	source $AMPATH/modules/files.am
 	;;
 
-  '-H'|'--home')
+  '-H'|'--home'|'--firejail'|'--sandbox')
 
 	_no_sudo
 
-	if ! test -f $AMPATH/modules/home.am; then
-		wget -q $AMREPO/modules/home.am -O $AMPATH/modules/home.am
-		chmod a+x $AMPATH/modules/home.am
+	if ! test -f $AMPATH/modules/sandboxes.am; then
+		wget -q $AMREPO/modules/sandboxes.am -O $AMPATH/modules/sandboxes.am
+		chmod a+x $AMPATH/modules/sandboxes.am
 	fi
 
-	source $AMPATH/modules/home.am "$@"
+	source $AMPATH/modules/sandboxes.am "$@"
 	;;
 
   '-i'|'install')
@@ -299,43 +307,19 @@ case "$1" in
 	source $AMPATH/modules/install.am "$@"
 	;;
 
-  '-l'|'list')
-
-  	_no_sudo
-
-	if ! test -f $AMPATH/modules/list.am; then
-		wget -q $AMREPO/modules/list.am -O $AMPATH/modules/list.am
-		chmod a+x $AMPATH/modules/list.am
-	fi
-
-	source $AMPATH/modules/list.am "$@"
-	;;
-
-  '-o'|'overwrite')
+  '-l'|'list'|'-q'|'query')
 
 	_no_sudo
 
-	if ! test -f $AMPATH/modules/overwrite.am; then
-		wget -q $AMREPO/modules/overwrite.am -O $AMPATH/modules/overwrite.am
-		chmod a+x $AMPATH/modules/overwrite.am
+	if ! test -f $AMPATH/modules/list-query.am; then
+		wget -q $AMREPO/modules/list-query.am -O $AMPATH/modules/list-query.am
+		chmod a+x $AMPATH/modules/list-query.am
 	fi
 
-	source $AMPATH/modules/overwrite.am "$@"
+	source $AMPATH/modules/list-query.am "$@"
 	;;
 
-  '-q'|'query')
-
-	_no_sudo
-
-	if ! test -f $AMPATH/modules/query.am; then
-		wget -q $AMREPO/modules/query.am -O $AMPATH/modules/query.am
-		chmod a+x $AMPATH/modules/query.am
-	fi
-
-	source $AMPATH/modules/query.am "$@"
-	;;
-
-  '-r'|'remove')
+  '-R'|'-r'|'remove')
 
 	if ! test -f $AMPATH/modules/remove.am; then
 		wget -q $AMREPO/modules/remove.am -O $AMPATH/modules/remove.am
@@ -343,16 +327,6 @@ case "$1" in
 	fi
 
 	source $AMPATH/modules/remove.am "$@"
-	;;
-
-  '-R')
-
-	if ! test -f $AMPATH/modules/R.am; then
-		wget -q $AMREPO/modules/R.am -O $AMPATH/modules/R.am
-		chmod a+x $AMPATH/modules/R.am
-	fi
-
-	source $AMPATH/modules/R.am "$@"
 	;;
 
   '-s'|'sync')
@@ -381,7 +355,7 @@ case "$1" in
 	source $AMPATH/modules/template.am "$@"
 	;;
 
-  '-u'|'-U'|'update') 
+  '-u'|'-U'|'update'|'--force-latest') 
 
 	_no_sudo
 	_online_check
@@ -394,51 +368,35 @@ case "$1" in
 	source $AMPATH/modules/update.am "$@"
 	;;
 
-  '-w'|'web')
+  '--disable-completion')
 
-	_no_sudo
-	_online_check
-
-	if ! test -f $AMPATH/modules/web.am; then
-		wget -q $AMREPO/modules/web.am -O $AMPATH/modules/web.am
-		chmod a+x $AMPATH/modules/web.am
+  	if [ $(grep -o $AMCLI 0<$COMPLETIONPATH/$COMPLETIONFILE | head -1) == $AMCLI 2>/dev/null ]; then
+  		grep -v 'complete -W "$(cat '$AMPATH'/list 2>/dev/null)" '$AMCLI'' $COMPLETIONPATH/$COMPLETIONFILE > $AMPATH/$COMPLETIONFILE.backup &&
+		$SUDOCOMMAND mv $AMPATH/$COMPLETIONFILE.backup $COMPLETIONPATH/$COMPLETIONFILE
+		echo " Completion disabled! "
+	else
+		echo " Completion script is NOT enabled! "
 	fi
-
-	source $AMPATH/modules/web.am "$@"
 	;;
 
-  '--disable-completion'|'--enable-completion')
+  '--enable-completion')
 
-	if ! test -f $AMPATH/modules/completion.am; then
-		wget -q $AMREPO/modules/completion.am -O $AMPATH/modules/completion.am
-		chmod a+x $AMPATH/modules/completion.am
+	if [ $(grep -o $AMCLI 0<$COMPLETIONPATH/$COMPLETIONFILE | head -1) == $AMCLI 2>/dev/null ]; then
+		echo " Completion script is already enabled!"
+	else
+		$SUDOCOMMAND mkdir -p $COMPLETIONPATH
+		if [ $AMCLI == appman ]; then
+			if ! test -f $COMPLETIONPATH/$COMPLETIONFILE; then
+				echo '#!/usr/bin/env bash' >> $COMPLETIONFILE
+			fi
+		else
+			echo '#!/usr/bin/env bash' >> $COMPLETIONFILE
+		fi
+		echo 'complete -W "$(cat '$AMPATH'/list 2>/dev/null)" '$AMCLI'' >> $COMPLETIONFILE
+		chmod a+x $COMPLETIONFILE
+		$SUDOCOMMAND mv $COMPLETIONFILE $COMPLETIONPATH/ 2> /dev/null
+		echo " Completion has been enabled!"
 	fi
-
-	source $AMPATH/modules/completion.am "$@"
-	;;
-
-  '--firejail'|'--sandbox')
-
-	_no_sudo
-
-	if ! test -f $AMPATH/modules/firejail.am; then
-		wget -q $AMREPO/modules/firejail.am -O $AMPATH/modules/firejail.am
-		chmod a+x $AMPATH/modules/firejail.am
-	fi
-
-	source $AMPATH/modules/firejail.am "$@"
-	;;
-
-  '--force-latest')
-
-	_no_sudo
-
-	if ! test -f $AMPATH/modules/force-latest.am; then
-		wget -q $AMREPO/modules/force-latest.am -O $AMPATH/modules/force-latest.am
-		chmod a+x $AMPATH/modules/force-latest.am
-	fi
-
-	source $AMPATH/modules/force-latest.am "$@"
 	;;
 
   '--launcher')
@@ -471,50 +429,33 @@ case "$1" in
   	_no_sudo
   	_online_check
 
-	if ! test -f $AMPATH/modules/user.am; then
-		wget -q $AMREPO/modules/user.am -O $AMPATH/modules/user.am
-		chmod a+x $AMPATH/modules/user.am
+	if [ $AMCLI == appman ] 2>/dev/null; then
+		echo " This function only works for AM"
+		exit
 	fi
 
-	source $AMPATH/modules/user.am
+	RED='\033[0;31m'; LightBlue='\033[1;34m'
+	if test -f /opt/am/appman; then
+		_appman
+		echo -e "Please run '${RED}alias am=/opt/am/appman\033[0m' to made 'AM' act exactly like 'AppMan' for\nthe current session or save this command to your '"'~/.bashrc'"' file to make the\nchanges permanent. Visit ${LightBlue}https://github.com/ivan-hc/appman\033[0m for more!"
+	else
+		_appman
+		wget -q $AMREPO/APP-MANAGER -O /opt/am/appman && chmod a+x /opt/am/appman
+		echo -e "Please run '${RED}alias am=/opt/am/appman\033[0m' to made 'AM' act exactly like 'AppMan' for\nthe current session or save this command to your '"'~/.bashrc'"' file to make the\nchanges permanent."
+  	fi
   	;;
 
-  'apikey')
+  'apikey'|'newrepo')
 
 	_no_sudo
 	_online_check
 
-	if ! test -f $AMPATH/modules/apikey.am; then
-		wget -q $AMREPO/modules/apikey.am -O $AMPATH/modules/apikey.am
-		chmod a+x $AMPATH/modules/apikey.am
+	if ! test -f $AMPATH/modules/devtools.am; then
+		wget -q $AMREPO/modules/devtools.am -O $AMPATH/modules/devtools.am
+		chmod a+x $AMPATH/modules/devtools.am
 	fi
 
-	source $AMPATH/modules/apikey.am "$@"
-	;;
-
-  'lock')
-
-	_no_sudo
-
-	if ! test -f $AMPATH/modules/lock.am; then
-		wget -q $AMREPO/modules/lock.am -O $AMPATH/modules/lock.am
-		chmod a+x $AMPATH/modules/lock.am
-	fi
-
-	source $AMPATH/modules/lock.am "$@"
-	;;
-
-  'newrepo')
-
-	_no_sudo
-	_online_check
-
-	if ! test -f $AMPATH/modules/newrepo.am; then
-		wget -q $AMREPO/modules/newrepo.am -O $AMPATH/modules/newrepo.am
-		chmod a+x $AMPATH/modules/newrepo.am
-	fi
-
-	source $AMPATH/modules/newrepo.am "$@"
+	source $AMPATH/modules/devtools.am "$@"
 	;;
 
   'nolibfuse')
@@ -530,21 +471,9 @@ case "$1" in
 	source $AMPATH/modules/nolibfuse.am "$@"
 	;;
 
-  'unlock')
-
-	_no_sudo
-
-	if ! test -f $AMPATH/modules/unlock.am; then
-		wget -q $AMREPO/modules/unlock.am -O $AMPATH/modules/unlock.am
-		chmod a+x $AMPATH/modules/unlock.am
-	fi
-
-	source $AMPATH/modules/unlock.am "$@"
-	;;
-
   'version'|'-v'|'--version')
 
-  	echo "6.1.3";;
+  	echo "6.2";;
 
   *) exec $AMCLIPATH ;;
 
