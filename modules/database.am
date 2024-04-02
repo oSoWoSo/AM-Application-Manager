@@ -6,7 +6,7 @@ function usage() {
 }
 
 function download_markdown() {
-	local markdown_url="https://raw.githubusercontent.com/Portable-Linux-Apps/Portable-Linux-Apps.github.io/main/apps/${1}.md"
+	local markdown_url="$AMCATALOGUEMARKDOWNS/${1}.md"
 	local cache_dir="$AMPATH/.cache/about"
 	local app_status=" STATUS: NOT INSTALLED"
 	local package_name=${1^^}
@@ -52,7 +52,7 @@ function download_lib() {
 	grep "◆ $1 : " "$AMPATH/libs-list" | sed 's#.*:##' | sed 's/(/\n (/g'
 	echo "" && echo " SITE/SOURCES:" && echo ""
 
-	local site_source=$(wget -qO- "$AMREPO/programs/$arch/$1" | grep -Eo "(http|https)://[a-zA-Z0-9./?=_%:-]*" | head -1)
+	local site_source=$(wget -qO- "$APPSDB/$1" | grep -Eo "(http|https)://[a-zA-Z0-9./?=_%:-]*" | head -1)
 	echo " $site_source"
 	echo ""
 	printf "%s\n" "-----------------------------------------------------------------------"
@@ -61,14 +61,19 @@ function download_lib() {
 function _completion_lists(){
 	# Remove existing lists and download new ones
 	rm -Rf $AMPATH/{$arch-apps,list,libs-list} &&
-	wget -q $AMREPO/programs/$arch-apps -P $AMPATH &&
-	wget -q $AMREPO/programs/libs-list -P $AMPATH
-	
+	wget -q $APPSLISTDB -P $AMPATH &&
+	if [ -f "$AMPATH/neodb" ]; then
+		rm -f "$AMPATH/libs-list"
+		touch "$AMPATH/libs-list"
+	else
+		wget -q $LIBSLISTDB -P $AMPATH
+	fi
+
 	# Extract and append program and library names to the list
 	for file in $arch-apps libs-list; do
 		awk -v FS="(◆ | : )" '{print $2}' <$AMPATH/$file >> $AMPATH/list
 	done
-	
+
 	# Append options to the list
 	cat $AMPATH/options >> $AMPATH/list
 }
@@ -102,12 +107,16 @@ case "$1" in
   '-a'|'about')
 	# Main logic
 	if [ ! -f "$AMPATH/libs-list" ]; then
-		wget -q $AMREPO/programs/libs-list -P $AMPATH
+		wget -q $LIBSLISTDB -P $AMPATH
+	fi
+	if [ -f "$AMPATH/neodb" ]; then
+		rm -f "$AMPATH/libs-list"
+		touch "$AMPATH/libs-list"
 	fi
 
 	# Skip the first argument which is not part of ARGS
 	for arg in "${@:2}"; do
-		if curl -o /dev/null -sIf "https://raw.githubusercontent.com/Portable-Linux-Apps/Portable-Linux-Apps.github.io/main/apps/${arg}.md" 1>/dev/null; then
+		if curl -o /dev/null -sIf "$AMCATALOGUEMARKDOWNS/${arg}.md" 1>/dev/null; then
 			download_markdown "$arg"
 		elif grep -q "◆ $arg : " "$AMPATH/libs-list"; then
 			download_lib "$arg"

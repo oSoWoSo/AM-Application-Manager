@@ -5,6 +5,19 @@ CLI=$(basename "$0")
 
 if ! command -v xdg-user-dir 1>/dev/null; then echo ' ⚠️ WARNING: "xdg-user-dir" command not found (required by modules)'; exit; fi
 
+# Check XDG variables
+if [ -n "$XDG_CONFIG_HOME" ]; then
+	APPMANCONFIG="$XDG_CONFIG_HOME/appman"
+else
+	APPMANCONFIG="$HOME/.config/appman"
+fi
+
+if [ -n "$XDG_DATA_HOME" ]; then
+        DATADIR="$XDG_DATA_HOME"
+else
+        DATADIR="$HOME/.local/share"
+fi
+
 function _am(){
 	AMCLI="am"
 	AMCLIPATH="$AMCLI"
@@ -49,7 +62,7 @@ function _appman() {
 		APPSDIR=$1
 		mkdir -p ~/"$APPSDIR"/appman/.cache
 		mkdir -p ~/"$APPSDIR"/appman/modules
-		mkdir -p ~/.local/bin ~/.local/share/applications ~/.local/share/icons
+		mkdir -p ~/.local/bin "$DATADIR"/applications "$DATADIR"/icons
 		AMCLI="appman"
 		AMCLIPATH="$DIR/$AMCLI"
 		SUDOCOMMAND=""
@@ -59,12 +72,6 @@ function _appman() {
 		AMPATH="$HOME/$APPSDIR/$AMCLI"
 	}
 
-	# Check XDG varaible
-	if [ -n "$XDG_CONFIG_HOME" ]; then
-		APPMANCONFIG="$XDG_CONFIG_HOME/appman"
-	else
-		APPMANCONFIG="$HOME/.config/appman"
-	fi
 	# Main execution
 	if [[ ! -f "$APPMANCONFIG"/appman-config ]]; then
 		echo "--------------------------------------------------------------------------"
@@ -106,8 +113,20 @@ function _online_check(){
 	fi
 }
 
+# Determine catalogue in use
+export AMCATALOGUE="https://PORTABLE-LINUX-APPS.GITHUB.IO"
+export AMCATALOGUEMARKDOWNS="https://raw.githubusercontent.com/Portable-Linux-Apps/Portable-Linux-Apps.github.io/main/apps"
+export AMCATALOGUEICONS="https://raw.githubusercontent.com/Portable-Linux-Apps/Portable-Linux-Apps.github.io/main/icons"
+
+# Determine system architecture and current user
+export arch="$HOSTTYPE"
+export currentuser="$USER"
+
 if [[ -f "$AMPATH"/new-repo.txt ]]; then
 	AMREPO=$(<"$AMPATH/new-repo.txt") # Utilizing command substitution with < for more efficient file reading
+	APPSDB="$AMREPO/programs/$arch"
+	APPSLISTDB="$AMREPO/programs/$arch-apps"
+	LIBSLISTDB="$AMREPO/programs/libs-list"
 	if [[ "$@" != "newrepo off" ]]; then
 		echo '--------------------------------------------------------------------------'
 		echo " Source: $AMREPO"
@@ -115,11 +134,20 @@ if [[ -f "$AMPATH"/new-repo.txt ]]; then
 	fi
 else
 	AMREPO="https://raw.githubusercontent.com/IVAN-HC/AM/main" # Consolidating variable assignments for clarity and brevity
+	APPSDB="$AMREPO/programs/$arch"
+	APPSLISTDB="$AMREPO/programs/$arch-apps"
+	LIBSLISTDB="$AMREPO/programs/libs-list"
 fi
 
-# Determine system architecture and current user
-export arch="$HOSTTYPE"
-export currentuser="$USER"
+# To implement future application database changes
+if [ -f "$AMPATH/neodb" ]; then
+	regex='(https?|ftp|file)://[-[:alnum:]\+&@#/%?=~_|!:,.;]*[-[:alnum:]\+&@#/%=~_|]'
+	neodburl=$(<"$AMPATH/neodb")
+	if [[ $neodburl =~ $regex ]]; then
+		APPSDB="$(<"$AMPATH/neodb")/$arch"
+		APPSLISTDB="$(<"$AMPATH/neodb")/$arch-apps"
+	fi
+fi
 
 # Check for essential commands required by the application
 missing_deps=()
@@ -167,6 +195,7 @@ cat <<-HEREDOC >> "$AMPATH/options"
 	--force-latest
 	--home
 	--launcher
+	--less
 	--libs
 	--rollback
 	--sandbox
@@ -464,7 +493,7 @@ case "$1" in
 
   'version'|'-v'|'--version')
 
-  	echo "6.2.1-1";;
+  	echo "6.2.1-3";;
 
   *) exec "$AMCLIPATH" ;;
 
