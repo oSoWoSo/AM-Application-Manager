@@ -29,7 +29,7 @@
 ◆ altus : Client for WhatsApp Web with themes & multiple account support.
 ◆ alvr-appimage : Stream VR games from your PC to your headset via Wi-Fi.
 ◆ amazingmarvin-appimage : Incorporates principles from behavioral psychology.
-◆ amdgpu-top : Tool to display AMDGPU usage.
+◆ amdgpu_top : Tool to display AMDGPU usage.
 ◆ amusiz : Unofficial and unpretentious Amazon Music client.
 ◆ anavis : Tool to visualize musical form.
 ◆ anchor : An EOSIO Light Wallet with simple and advanced tools.
@@ -1653,6 +1653,7 @@
 ◆ supertux : Classic 2D jump'n run sidescroller game inspired to Super Mario.
 ◆ supertuxkart-appimage : Racing game focused on Fun (Unofficial AppImage).
 ◆ supertuxkart : The original Free kart racing game focused on Fun!
+◆ suyu : Open-source, Nintendo Switch emulator, continuation of yuzu.
 ◆ svelte-electron : Create desktop apps with this Svelte boilerplate.
 ◆ swaglyrics : SwagLyrics AppImage (unofficial).
 ◆ swc-minecraft-launcher : SWC Minecraft Launcher.
@@ -1939,7 +1940,6 @@
 ◆ yuna : Anime player integrated with AniList, Crunchyroll, and Hidive.
 ◆ yuview : YUV player with an advanced analytic toolset.
 ◆ yuzu : An experimental open-source emulator for the Nintendo Switch.
-◆ yuzu : Open-source, Nintendo Switch emulator.
 ◆ zap : Delightful command line AppImage package manager for appimage.github.io.
 ◆ zapdesktop : Desktop application for the lightning network.
 ◆ zegarek : A simple clock with millisecond resolution.
