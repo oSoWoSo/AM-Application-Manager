@@ -55,8 +55,6 @@ function _help_head(){
  SYNOPSIS:	-a {PROGRAM}
  
  DESCRIPTION: 	Shows more info about one or more apps.
- 
- All pages come from https://portable-linux-apps.github.io
  __________________________________________________________________________
  
  -b, backup
@@ -92,8 +90,11 @@ function _help_head(){
  -f, files
  
  SYNOPSIS:	-f
+ 		-f --less
  
  DESCRIPTION:	Shows the list of all installed programs, with sizes.
+ 
+ With the option "--less" it shows only the number of installed apps.
  __________________________________________________________________________
  
  -h, help
@@ -326,8 +327,6 @@ function _help_head(){
  printf '
  
  SITES:	
- 
- https://PORTABLE-LINUX-APPS.GITHUB.IO
  
  https://github.com/IVAN-HC/AM
  

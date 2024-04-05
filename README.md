@@ -27,6 +27,7 @@
 - [Manage local AppImages](#manage-local-appimages)
 - [Sandbox using Firejail](#sandbox-using-firejail)
 - [Create and test your own installation script](#create-and-test-your-own-installation-script)
+- [Third-party databases for applications (NeoDB)](#third-party-databases-for-applications-neodb)
 
 [Troubleshooting](#troubleshooting)
 - [An application does not work, is old and unsupported](#an-application-does-not-work-is-old-and-unsupported)
@@ -347,8 +348,10 @@ to have a list of the installed programs use the option `-f` or `files` (syntax 
  SYNOPSIS:
 
  `-f`
+
+ `-f --less`
  
- DESCRIPTION:	Shows the list of all installed programs, with sizes.
+ DESCRIPTION:	Shows the list of all installed programs, with sizes. With the option "--less" it shows only the number of installed apps.
  ___________________________________________________________________________
  
  `-h`, `help`
@@ -771,7 +774,18 @@ To install and test your own script, use the command `am -i /path/to/your-script
 
 </details>
 
------------------------------------------------------------------------------
+------------------------------------------------------------------------
+# Third-party databases for applications (NeoDB)
+<details>
+  <summary></summary>
+
+From version 6.4, "AM"/"AppMan" can be extended by adding new application databases using a configuration file named "neodb".
+
+### For more details, see the full guide at https://github.com/ivan-hc/neodb
+
+</details>
+
+------------------------------------------------------------------------
 -----------------------------------------------------------------------------
 # Troubleshooting
 -----------------------------------------------------------------------------

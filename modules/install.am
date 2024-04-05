@@ -109,14 +109,14 @@ while [ -n "$1" ]; do
 					function _install_appman_local_patch(){
 						sed -i "s#/opt/#$APPSPATH/#g" ./$arg
 						sed -i "s# /opt# $APPSPATH#g" ./$arg
-						sed -i "s# /usr/local/bin# $(xdg-user-dir USER)/.local/bin#g" ./$arg
-						sed -i "s# /usr/bin# $(xdg-user-dir USER)/.local/bin#g" ./$arg
-						sed -i "s# /usr/local/games# $(xdg-user-dir USER)/.local/bin#g" ./$arg
-						sed -i "s# /usr/games# $(xdg-user-dir USER)/.local/bin#g" ./$arg
-						sed -i "s# /usr/share/applications# $(xdg-user-dir USER)/.local/share/applications#g" ./$arg
-						sed -i "s# /usr/local/share/applications# $(xdg-user-dir USER)/.local/share/applications#g" ./$arg
-						sed -i "s# /usr/share/pixmaps# $(xdg-user-dir USER)/.local/share/icons#g" ./$arg
-						sed -i "s# /usr/local/share/pixmaps# $(xdg-user-dir USER)/.local/share/icons#g" ./$arg
+						sed -i "s# /usr/local/bin# $HOME/.local/bin#g" ./$arg
+						sed -i "s# /usr/bin# $HOME/.local/bin#g" ./$arg
+						sed -i "s# /usr/local/games# $HOME/.local/bin#g" ./$arg
+						sed -i "s# /usr/games# $HOME/.local/bin#g" ./$arg
+						sed -i "s# /usr/share/applications# $DATADIR/applications#g" ./$arg
+						sed -i "s# /usr/local/share/applications# $DATADIR/applications#g" ./$arg
+						sed -i "s# /usr/share/pixmaps# $DATADIR/icons#g" ./$arg
+						sed -i "s# /usr/local/share/pixmaps# $DATADIR/icons#g" ./$arg
 					}
 
 					if [ $AMCLI == appman ] 2>/dev/null; then
@@ -152,20 +152,20 @@ while [ -n "$1" ]; do
 					$SUDOCOMMAND chown -R $currentuser $APPSPATH/$(cd $APPSPATH && ls -td * | head -1) 2> /dev/null
 					if test -f $APPSPATH/$(cd $APPSPATH && ls -td * | head -1)/AM-updater; then
 						mkdir $APPSPATH/$(cd $APPSPATH && ls -td * | head -1)/.am-installer 2> /dev/null &&
-						wget -q $AMREPO/programs/$arch/$arg -O $APPSPATH/$(cd $APPSPATH && ls -td * | head -1)/.am-installer/$arg
+						wget -q $APPSDB/$arg -O $APPSPATH/$(cd $APPSPATH && ls -td * | head -1)/.am-installer/$arg
 					fi &&
 					if test -d $APPSPATH/$(cd $APPSPATH && ls -td * | head -1)/icons; then
 						find $APPSPATH/$(cd $APPSPATH && ls -td * | head -1)/icons/* -xtype l -delete 2> /dev/null
 						if [ -z "$(ls -A $APPSPATH/$(cd $APPSPATH && ls -td * | head -1)/icons)" ]; then
-							wget -q https://raw.githubusercontent.com/Portable-Linux-Apps/Portable-Linux-Apps.github.io/main/icons/$arg.png -O $APPSPATH/$(cd $APPSPATH && ls -td * | head -1)/icons/$arg
+							wget -q "$AMCATALOGUEICONS"/$arg.png -O $APPSPATH/$(cd $APPSPATH && ls -td * | head -1)/icons/$arg
 						fi 
 					fi &&
 					if [ $AMCLI == appman ] 2>/dev/null; then
-						sed -i "s#Icon=/opt#Icon=$(xdg-user-dir USER)/$APPSDIR#g" ~/.local/share/applications/AM*.desktop 2> /dev/null
-						sed -i "s#Exec=$arg#Exec=$(xdg-user-dir USER)/.local/bin/$arg#g" ~/.local/share/applications/AM*.desktop 2> /dev/null
-						sed -i 's#Exec=$APP#Exec='$(xdg-user-dir USER)'/.local/bin/$APP#g' ~/.local/share/applications/AM*.desktop 2> /dev/null
-						sed -i "s#Exec=/usr/bin/#Exec=$(xdg-user-dir USER)/.local/bin/#g" ~/.local/share/applications/AM*.desktop 2> /dev/null
-						sed -i "s#Exec=/opt/#Exec=$(xdg-user-dir USER)/$APPSDIR/#g" ~/.local/share/applications/AM*.desktop 2> /dev/null
+						sed -i "s#Icon=/opt#Icon=$HOME/$APPSDIR#g" "$DATADIR"/applications/AM*.desktop 2> /dev/null
+						sed -i "s#Exec=$arg#Exec=$HOME/.local/bin/$arg#g" "$DATADIR"/applications/AM*.desktop 2> /dev/null
+						sed -i 's#Exec=$APP#Exec='$HOME'/.local/bin/$APP#g' "$DATADIR"/applications/AM*.desktop 2> /dev/null
+						sed -i "s#Exec=/usr/bin/#Exec=$HOME/.local/bin/#g" "$DATADIR"/applications/AM*.desktop 2> /dev/null
+						sed -i "s#Exec=/opt/#Exec=$HOME/$APPSDIR/#g" "$DATADIR"/applications/AM*.desktop 2> /dev/null
 					fi
 
 					unset $LATESTDIR
@@ -208,16 +208,49 @@ while [ -n "$1" ]; do
 			if test -f $APPSPATH/$arg/remove; then
 				echo " ◆ $(echo '"'$arg'"' | tr a-z A-Z): app already installed previously! Try removing it."
 			else
-				if test -f $arg 2> /dev/null; then
+				if test -f ./$arg 2> /dev/null; then
+					mkdir -p $AMPATH/.cache/tmp; cp ./$arg $AMPATH/.cache/tmp/$arg; cd $AMPATH/.cache || return; mv ./tmp/$arg ./$arg; rmdir ./tmp
+					_install_arg
+				elif test -f $arg 2> /dev/null; then
 					path2arg=$(echo "$arg")
 					arg=$(echo "$path2arg" | sed 's:.*/::')
-					cd $AMPATH/.cache; mkdir -p tmp; cd tmp; cp $path2arg ./$arg; cd ..; mv ./tmp/$arg ./$arg; rmdir ./tmp
+					cd $AMPATH/.cache || return; mkdir -p tmp; cd tmp || return; cp $path2arg ./$arg; cd ..; mv ./tmp/$arg ./$arg; rmdir ./tmp
 					_install_arg
-				elif curl --output /dev/null --silent --head --fail $AMREPO/programs/$arch/$arg  1>/dev/null; then
-					cd $AMPATH/.cache; mkdir -p tmp; cd tmp; wget -q $AMREPO/programs/$arch/$arg; cd ..; mv ./tmp/$arg ./$arg; rmdir ./tmp
-					_install_arg
-				elif curl --output /dev/null --silent --head --fail $AMREPO/libraries/any/$arg  1>/dev/null; then
-					cd $AMPATH/.cache; mkdir -p tmp; cd tmp; wget -q $AMREPO/libraries/any/$arg; cd ..; mv ./tmp/$arg ./$arg; rmdir ./tmp
+				elif test -f "$AMPATH/neodb"; then
+					rm -R -f "$AMPATH/.cache/multirepo-args"
+					MULTIREPO=$(cat "$AMPATH/neodb" | grep "Source=" | cut -c 8-)
+					for anyrepo in $MULTIREPO; do
+						if curl --output /dev/null --silent --head --fail $anyrepo/$arg  1>/dev/null; then
+							echo "$anyrepo" >> "$AMPATH/.cache/multirepo-args"
+						fi
+					done
+					if test -f "$AMPATH/.cache/multirepo-args"; then
+						anyrepoargs=$(cat "$AMPATH/.cache/multirepo-args" 2>/dev/null | wc -l)
+						if [ $anyrepoargs -gt 0 ]; then
+							if curl --output /dev/null --silent --head --fail $APPSDB/$arg  1>/dev/null; then
+								echo "$APPSDB" >> "$AMPATH/.cache/multirepo-args"
+							fi
+							echo -e "\n ◆ FOUND $(echo '"'$arg'"' | tr a-z A-Z) FROM MULTIPLE SOURCES:\n" &&
+							printf " Select a URL from this menu (read carefully) or press CTRL+C to abort:\n\n"; sleep 1;
+							select d in $(cat "$AMPATH/.cache/multirepo-args"); do test -n "$d" && break; echo ">>> Invalid Selection"; done
+							cd $AMPATH/.cache || return; mkdir -p tmp; cd tmp || return; wget -q "$d/$arg"; cd ..; mv ./tmp/$arg ./$arg; rmdir ./tmp
+							rm -R -f "$AMPATH/.cache/multirepo-args"
+							_install_arg
+						elif curl --output /dev/null --silent --head --fail $APPSDB/$arg  1>/dev/null; then
+							cd $AMPATH/.cache || return; mkdir -p tmp; cd tmp || return; wget -q $APPSDB/$arg; cd ..; mv ./tmp/$arg ./$arg; rmdir ./tmp
+							rm -R -f "$AMPATH/.cache/multirepo-args"
+							_install_arg
+						else
+							echo ' 💀 ERROR: "'$arg'" does NOT exist in the database, see "'$AMCLI' -l"'
+						fi
+					elif curl --output /dev/null --silent --head --fail $APPSDB/$arg  1>/dev/null; then
+						cd $AMPATH/.cache || return; mkdir -p tmp; cd tmp || return; wget -q $APPSDB/$arg; cd ..; mv ./tmp/$arg ./$arg; rmdir ./tmp
+						_install_arg
+					else
+						echo ' 💀 ERROR: "'$arg'" does NOT exist in the database, see "'$AMCLI' -l"'
+					fi
+				elif curl --output /dev/null --silent --head --fail $APPSDB/$arg  1>/dev/null; then
+					cd $AMPATH/.cache || return; mkdir -p tmp; cd tmp || return; wget -q $APPSDB/$arg; cd ..; mv ./tmp/$arg ./$arg; rmdir ./tmp
 					_install_arg
 				else
 					echo ' 💀 ERROR: "'$arg'" does NOT exist in the database, see "'$AMCLI' -l"'
