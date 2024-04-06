@@ -1,0 +1,62 @@
+#!/bin/sh
+
+APP=btop
+
+# CREATING THE FOLDER
+mkdir /opt/$APP
+cd /opt/$APP;
+
+# ADD THE REMOVER
+echo '#!/bin/sh' >> /opt/$APP/remove
+echo "rm -R -f /usr/share/applications/AM-$APP.desktop /opt/$APP /usr/local/bin/$APP" >> /opt/$APP/remove
+chmod a+x /opt/$APP/remove
+
+mkdir tmp;
+cd tmp;
+
+v=$(wget -q https://api.github.com/repos/hykilpikonna/hyfetch/releases/latest -O - | grep -E tag_name | awk -F '[""]' '{print $4}')
+wget -q https://raw.githubusercontent.com/hykilpikonna/hyfetch/1.4.11/neofetch
+echo "$v" >> ./version
+mv ./tmp/* ./;
+ln -s ./bin/neofetch ./neofetch
+
+rm -R -f ./tmp
+
+# LINK
+ln -s /opt/$APP/$APP /usr/local/bin/$APP
+
+# SCRIPT TO UPDATE THE PROGRAM
+cat >> /opt/$APP/AM-updater << 'EOF'
+#!/bin/sh
+APP=neofetch
+version0=$(cat /opt/$APP/version)
+url=https://api.github.com/repos/aristocratos/btop/releases/latest
+if curl -L -s $url | grep -ioF "$version0"; then
+  echo "Update not needed!".
+else
+  notify-send "A new version of $APP is available, please wait"
+  mkdir /opt/$APP/tmp
+  cd /opt/$APP/tmp
+  v=$(wget -q https://api.github.com/repos/aristocratos/btop/releases/latest -O - | grep -E tag_name | awk -F '[""]' '{print $4}')
+  wget https://github.com/aristocratos/btop/releases/download/$v/btop-x86_64-linux-musl.tbz
+  tar xf ./*.tbz;
+  cd ..;
+  if test -f ./tmp/*.tbz; then rm -R -f /opt/$APP/version
+  fi
+  echo "$v" >> /opt/$APP/version
+  rm ./tmp/*.tbz;
+  mv --backup=t ./tmp/$(echo $dir)/* ./
+  rm -R -f ./tmp ./*~
+  notify-send "$APP is updated!"
+fi
+EOF
+chmod a+x /opt/$APP/AM-updater
+
+currentuser=$(who | awk '{print $1}')
+chown -R $currentuser /opt/$APP
+# MESSAGE
+echo "
+
+ Btop is provided by https://github.com/aristocratos/btop
+  
+";
