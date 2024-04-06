@@ -4,6 +4,11 @@
 # Uncomment the "STATUS" parameter to silence messages about third-party repos
 #STATUS=quiet
 
+[oSoWoSo]
+Source=https://raw.githubusercontent.com/oSoWoSo/AM/osowoso/programs/x86_64
+List=https://raw.githubusercontent.com/oSoWoSo/AM/osowoso/programs/x86_64-apps
+Markdowns=https://raw.githubusercontent.com/Portable-Linux-Apps/Portable-Linux-Apps.github.io/main/apps
+
 # Here you can add third party repos in a pacman.config's style way. They will
 # be accepted as follows:
 #
