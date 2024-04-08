@@ -1,6 +1,6 @@
 #!/bin/sh
 
-APP=deadbeef
+APP=deadbeef-devel
 SITE="https://deadbeef.sourceforge.io"
 
 # CREATE THE FOLDER
@@ -16,10 +16,10 @@ chmod a+x /opt/$APP/remove
 mkdir tmp
 cd ./tmp
 
-version=$(wget -q https://deadbeef.sourceforge.io/download.html -O - | grep -Eo "(http|https)://[a-zA-Z0-9./?=_%:-]*" | sort -u | grep "tar.bz" | grep static)
+version=$(wget -q https://sourceforge.net/projects/deadbeef/files/travis/linux/master/ -O - | grep -Eo "(http|https)://[a-zA-Z0-9./?=_%:-]*" | sort -u | grep "x86_64.tar.bz2")
 wget $version -O download.tar.bz2
 echo "$version" >> /opt/$APP/version
-tar fx ./*tar*; rm -f -R ./*tar*
+tar fx ./*tar*
 cd ..
 mv --backup=t ./tmp/*/* ./
 rm -R -f ./tmp
@@ -30,12 +30,12 @@ chmod a+x /usr/local/bin/$APP
 
 # SCRIPT TO UPDATE THE PROGRAM
 cat >> /opt/$APP/AM-updater << 'EOF'
-#!/usr/bin/env bash
-APP=deadbeef
+#!/bin/sh
+APP=deadbeef-devel
 version0=$(cat /opt/$APP/version)
-version=$(wget -q https://deadbeef.sourceforge.io/download.html -O - | grep -Eo "(http|https)://[a-zA-Z0-9./?=_%:-]*" | sort -u | grep "tar.bz" | grep static)
+version=$(wget -q https://sourceforge.net/projects/deadbeef/files/travis/linux/master/ -O - | grep -Eo "(http|https)://[a-zA-Z0-9./?=_%:-]*" | sort -u | grep "x86_64.tar.bz2")
 if [ $version = $version0 ]; then
-	echo "Update not needed!"
+	echo "deadbeef-devel is up to date!"
 else
 	notify-send "A new version of $APP is available, please wait"
 	mkdir /opt/$APP/tmp
@@ -60,7 +60,7 @@ wget https://raw.githubusercontent.com/DeaDBeeF-Player/deadbeef/master/icons/sca
 rm -f /usr/share/applications/AM-$APP.desktop
 echo "[Desktop Entry]
 Type=Application
-Name=DeaDBeeF
+Name=DeaDBeeF Nightly
 Exec=/opt/$APP/$APP %F
 Icon=/opt/$APP/icons/$APP
 GenericName=Audio Player
