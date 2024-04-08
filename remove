@@ -1,0 +1,2 @@
+#!/bin/sh
+rm -R -f /usr/local/bin/am /opt/am /etc/bash_completion.d/am-completion.sh
