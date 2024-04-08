@@ -52,6 +52,7 @@
 ◆ apifox : API manager (in chinese). 文档、API 调试、API Mock、API 自动化测试
 ◆ apk-editor-studio : Easy to use APK (Android) reverse-engineering tool.
 ◆ apla : Project was bootstrapped with Create React App.
+◆ apphub : App that simplifies installation/management of .appImage packages.
 ◆ appimage-builder : GNU/Linux packaging solution using the AppImage format.
 ◆ appimagecraft : Powerful build script generator with a focus on AppImages.
 ◆ appimagedl : Easily download AppImages from AppImageHub (unofficial fork).
@@ -374,6 +375,7 @@
 ◆ dbet-wallet : DBET Wallet.
 ◆ dbgate : Opensource database administration tool
 ◆ deadbeef : A modular cross-platform audio player.
+◆ deadbeef-devel : A modular cross-platform audio player (dev-edition).
 ◆ deadgame-2048 : GUI tool available for ALL platforms.
 ◆ deb2appimage : Build AppImages from deb packages on any distro.
 ◆ debian-testing-avidemux : Unofficial Avidemux built from deb-multimedia.
@@ -735,6 +737,7 @@
 ◆ hydrogen-music : The advanced drum machine for Linux, macOS, and Windows.
 ◆ hyper : A terminal built on web technologies.
 ◆ hyperdex : BarterDEX desktop app.
+◆ hyperfine : A command-line benchmarking tool.
 ◆ hyperionide : Hyperion IDE for JIRA.
 ◆ hyperkeys : Unleash you keyboard shorcuts.
 ◆ hyperspace : A fluffy client for Mastodon in React.
@@ -1469,6 +1472,7 @@
 ◆ rustdesk : Virtual/remote desktop infrastructure, like TeamViewer/Citrix.
 ◆ rx-bin : A modern and extensible pixel editor implemented in Rust.
 ◆ ryowallet : Modern GUI interface for Ryo Currency.
+◆ ryujinx : A simple, experimental Nintendo Switch emulator.
 ◆ sabaki : Modern, elegant, cross-platform Go/Baduk/Weiqi game board.
 ◆ saber : A (work-in-progress) cross-platform libre handwritten notes app.
 ◆ safe-multisig : Allowing crypto users manage funds in a safer way.
