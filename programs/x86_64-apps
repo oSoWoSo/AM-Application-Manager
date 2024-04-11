@@ -35,6 +35,7 @@
 ◆ anchor : An EOSIO Light Wallet with simple and advanced tools.
 ◆ android-knot : An Android gadget integrating Todo, Notes, Reader and more.
 ◆ android-messages-desktop : Messages for web, as a desktop app.
+◆ android-tools : AppImage for the Android Platform tools (adb, fastboot, etc)
 ◆ animashooter-junior : User-friendly Stop-Motion Animation Software (FREE).
 ◆ animashooter-pioneer : User-friendly Stop-Motion Animation Software (PRO).
 ◆ animos : Anime-streaming desktop application without any ads.
@@ -376,6 +377,7 @@
 ◆ dbgate : Opensource database administration tool
 ◆ deadbeef : A modular cross-platform audio player.
 ◆ deadbeef-devel : A modular cross-platform audio player (dev-edition).
+◆ deadbeef-devel-appimage : Unofficial, music player (Nightly version).
 ◆ deadgame-2048 : GUI tool available for ALL platforms.
 ◆ deb2appimage : Build AppImages from deb packages on any distro.
 ◆ debian-testing-avidemux : Unofficial Avidemux built from deb-multimedia.
@@ -1472,6 +1474,7 @@
 ◆ rustdesk : Virtual/remote desktop infrastructure, like TeamViewer/Citrix.
 ◆ rx-bin : A modern and extensible pixel editor implemented in Rust.
 ◆ ryowallet : Modern GUI interface for Ryo Currency.
+◆ ryujinx-appimage : Unofficial AppImage of the Ryujinx emulator.
 ◆ ryujinx : A simple, experimental Nintendo Switch emulator.
 ◆ sabaki : Modern, elegant, cross-platform Go/Baduk/Weiqi game board.
 ◆ saber : A (work-in-progress) cross-platform libre handwritten notes app.
