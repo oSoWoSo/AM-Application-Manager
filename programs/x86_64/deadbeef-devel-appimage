@@ -1,11 +1,11 @@
 #!/bin/sh
 
-APP=SAMPLE
-SITE="REPLACETHIS"
+APP=deadbeef-devel-appimage
+REPO="Samueru-sama/DeaDBeef-AppImage"
 
-# CREATE THE FOLDER
-mkdir /opt/$APP
-cd /opt/$APP
+# CREATE DIRECTORIES
+if [ -z "$APP" ]; then exit 1; fi
+mkdir /opt/$APP && cd /opt/$APP
 
 # ADD THE REMOVER
 echo '#!/bin/sh' >> /opt/$APP/remove
@@ -13,14 +13,11 @@ echo "rm -R -f /usr/share/applications/AM-$APP.desktop /opt/$APP /usr/local/bin/
 chmod a+x /opt/$APP/remove
 
 # DOWNLOAD THE ARCHIVE
-mkdir tmp
-cd ./tmp
+mkdir ./tmp && cd ./tmp
 
-version=$(FUNCTION)
+version=$(wget -q https://api.github.com/repos/$REPO/releases -O - | grep browser_download_url | grep -i Nightly | cut -d '"' -f 4 | head -1)
 wget $version
-wget $version.zsync 2> /dev/null
 echo "$version" >> /opt/$APP/version
-
 cd ..
 mv ./tmp/*mage ./$APP
 mv ./tmp/*.zsync ./$APP.zsync 2> /dev/null
@@ -32,43 +29,32 @@ ln -s /opt/$APP/$APP /usr/local/bin/$APP
 
 # SCRIPT TO UPDATE THE PROGRAM
 cat >> /opt/$APP/AM-updater << 'EOF'
-#!/usr/bin/env bash
-APP=SAMPLE
-SITE="REPLACETHIS"
+#!/bin/sh
+APP=deadbeef-devel-appimage
+REPO="Samueru-sama/DeaDBeef-AppImage"
 version0=$(cat /opt/$APP/version)
-version=$(FUNCTION)
-if test -f /opt/$APP/*.zsync; then
-	mkdir /opt/$APP/tmp
-	cd /opt/$APP/tmp
-	wget $version.zsync 2> /dev/null
-	cd ..
-	mv ./tmp/*.zsync ./$APP.zsync
-	rm -R -f ./tmp
-	zsync /opt/$APP/$APP.zsync
-	rm -R -f /opt/$APP/*zs-old /opt/$APP/*.part
-	chmod a+x /opt/$APP/$APP
+version=$(wget -q https://api.github.com/repos/$REPO/releases -O - | grep browser_download_url | grep -i appimage | cut -d '"' -f 4 | head -1)
+if [ $version = $version0 ]; then
+	echo "Update not needed!"
 else
-	if [ $version = $version0 ]; then
-		echo "Update not needed!"
-	else
-		notify-send "A new version of $APP is available, please wait"
-		mkdir /opt/$APP/tmp
-		cd /opt/$APP/tmp
-		wget $version
-		if ls . | grep mage; then
-			
-			cd ..
-			
-	  		if test -f ./tmp/*mage; then rm ./version
-	  		fi
-	  		echo $version >> ./version
-	  		mv --backup=t ./tmp/* ./$APP
-	  		chmod a+x /opt/$APP/$APP
-	  		rm -R -f ./tmp ./*~
+	notify-send "A new version of $APP is available, please wait"
+	mkdir /opt/$APP/tmp
+	cd /opt/$APP/tmp || return
+	wget $version
+	if ls . | grep mage; then
+		
+		cd ..
+		
+	  	if test -f ./tmp/*mage; then rm ./version
+	  	fi
+	  	echo $version >> ./version
+	  	mv --backup=t ./tmp/* ./$APP
+	  	chmod a+x /opt/$APP/$APP
+	  	rm -R -f ./tmp ./*~
 		fi
-		notify-send "$APP is updated!"
-	fi
+	notify-send "$APP is updated!"
 fi
+
 EOF
 chmod a+x /opt/$APP/AM-updater
 
@@ -89,7 +75,7 @@ if [ ! -e ./$APP.desktop ]; then
 	rm ./$APP.desktop; ./$APP --appimage-extract share/applications/*$app*.desktop 1>/dev/null
 	mv squashfs-root/share/applications/*.desktop ./$APP.desktop
 fi
-CHANGEEXEC=$(cat ./$APP.desktop | grep Exec= | tr ' ' '\n' | tr '=' '\n' | tr '/' '\n' | grep -i $app | head -1)
+CHANGEEXEC=$(cat ./$APP.desktop | grep Exec= | tr ' ' '\n' | tr '=' '\n' | tr '/' '\n' | grep $app | head -1)
 sed -i "s#$CHANGEEXEC#$APP#g" ./$APP.desktop
 sed -i "s#AppRun#$APP#g" ./$APP.desktop
 sed -i "s#Exec=/bin/#Exec=#g" ./$APP.desktop
@@ -129,3 +115,8 @@ mv ./$APP.desktop /usr/share/applications/AM-$APP.desktop
 # CHANGE THE PERMISSIONS
 currentuser=$(who | awk '{print $1}')
 chown -R $currentuser /opt/$APP
+
+# MESSAGE
+echo "
+ $APP is provided by https://github.com/$(echo $REPO | sed 's:/[^/]*$::')
+"
