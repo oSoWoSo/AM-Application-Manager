@@ -46,6 +46,8 @@ case "$1" in
 		echo " USAGE: $AMCLI $1 [ARGUMENT]";
 	}
 
+	_check_version
+
 	function download_markdown() {
 		local markdown_url="$AMCATALOGUEMARKDOWNS/${1}.md"
 		local cache_dir="$AMPATH/.cache/about"
@@ -58,7 +60,8 @@ case "$1" in
 			printf " PACKAGE: %s\n" "$package_name"
 			if [ -f "$APPSPATH/$1/remove" ]; then
 				local disk_usage=$(du -sm "$APPSPATH/$1" | cut -f1)
-				app_status=" STATUS: INSTALLED, ABOUT $disk_usage MB OF DISK SPACE IN USE"
+				local app_version=$(cat $AMPATH/.cache/version-args | grep -w " ◆ $1	|" | sed 's:.*|	::')
+				app_status=$(echo -e " STATUS: INSTALLED, ABOUT $disk_usage MB OF DISK SPACE IN USE\n VERSION: $app_version")
 			fi
 			printf "%s\n" "$app_status"
 			cat -s "$cache_dir/$1.md" && printf "%s\n" "-----------------------------------------------------------------------"
@@ -75,7 +78,8 @@ case "$1" in
 			printf " PACKAGE: %s\n" "$arg" | tr a-z A-Z
 			if [ -f "$APPSPATH/$1/remove" ]; then
 				local disk_usage=$(du -sm "$APPSPATH/$1" | cut -f1)
-				app_status=" STATUS: INSTALLED, ABOUT $disk_usage MB OF DISK SPACE IN USE"
+				local app_version=$(cat $AMPATH/.cache/version-args | grep -w " ◆ $1	|" | sed 's:.*|	::')
+				app_status=$(echo -e " STATUS: INSTALLED, ABOUT $disk_usage MB OF DISK SPACE IN USE\n VERSION: $app_version")
 			fi
 			printf "%s\n" "$app_status"
 			cat "$AMPATH/$arch-apps" | grep "◆ $arg : "  | cut -d':' -f2- | sed 's/^./\n /' | sed 's# SOURCE:#\n\n SOURCE:#g'
@@ -133,32 +137,31 @@ case "$1" in
 	function _list(){
 		LIBNUMBER=$(cat $APPSPATH/*/remove 2> /dev/null | grep "usr/local/lib" | wc -l)
 		ITEMSNUMBER=$(cd $APPSPATH && find -name 'remove' -printf "%h\n" 2>/dev/null | sort -u | wc -l)
-		APPSNUMBER=$(echo "$(($ITEMSNUMBER - $LIBNUMBER))")
+		if [ "$AMCLI" == am ]; then
+			ITEMSNUMBER=$(("$ITEMSNUMBER"-1))
+		fi
+		APPSNUMBER=$(echo "$(("$ITEMSNUMBER" - "$LIBNUMBER"))")
+		_check_version
+		if test -f $AMPATH/.cache/version-args; then
+			INSTALLED=$(cat $AMPATH/.cache/version-args | sort | sed 's/	|	/ /g' | grep -v "◆ am ")
+			MESSAGE2="\n$INSTALLED\n"
+		fi
 
-		function _list_apps(){
-			wget -q --tries=10 --timeout=20 --spider https://github.com
-			if [[ $? -eq 0 ]]; then
-				_completion_lists
+		wget -q --tries=10 --timeout=20 --spider https://github.com
+		if [[ $? -eq 0 ]]; then
+			_completion_lists
+		fi
+		if cat $APPSPATH/*/remove 2> /dev/null | grep -q "usr/local/lib"; then
+			if [ "$LIBNUMBER" == 1 ]; then
+				MESSAGE=$(echo " YOU HAVE INSTALLED $APPSNUMBER APPLICATIONS OUT OF $(grep -e "$" -c $AMPATH/$arch-apps) AVAILABLE, AND $LIBNUMBER LIBRARY")
+			else
+				MESSAGE=$(echo " YOU HAVE INSTALLED $APPSNUMBER APPLICATIONS OUT OF $(grep -e "$" -c $AMPATH/$arch-apps) AVAILABLE, AND $LIBNUMBER LIBRARIES")
 			fi
+		else
 			MESSAGE=$(echo " YOU HAVE INSTALLED $APPSNUMBER APPLICATIONS OUT OF $(grep -e "$" -c $AMPATH/$arch-apps) AVAILABLE")
-			echo -e "\n$MESSAGE\n\n LIST OF THE $(grep -e "$" -c $AMPATH/$arch-apps) APPLICATIONS AVAILABLE IN THE 'AM' REPOSITORY:\n\n$(cat $AMPATH/$arch-apps | _clean_lists_and_queries)\n" | less -I
-			echo -e "\n $MESSAGE\n"
-		}
-
-		function _list_libs(){
-			wget -q --tries=10 --timeout=20 --spider https://github.com
-			if [[ $? -eq 0 ]]; then
-				_completion_lists
-			fi
-			MESSAGE=$(echo " YOU HAVE INSTALLED $LIBNUMBER LIBRARIES OUT OF $(grep -e "$" -c $AMPATH/libs-list) AVAILABLE")
-			echo -e "\n$MESSAGE\n\n LIST OF THE $(grep -e "$" -c $AMPATH/libs-list) LIBRARIES AVAILABLE IN THE 'AM' REPOSITORY:\n\n$(cat $AMPATH/libs-list | _clean_lists_and_queries)\n" | less -I
-			echo -e "\n $MESSAGE\n"
-		}
-
-		case $2 in
-		'--libs')	_list_libs;;
-		''|*)		_list_apps;;
-		esac
+		fi
+		echo -e "\n$MESSAGE\n$MESSAGE2\n LIST OF THE $(grep -e "$" -c $AMPATH/$arch-apps) APPLICATIONS AVAILABLE IN THE 'AM' REPOSITORY:\n\n$(cat $AMPATH/$arch-apps | _clean_lists_and_queries)\n" | less -I
+		echo -e "\n$MESSAGE\n$MESSAGE2"
 	}
 	_list
 	;;
