@@ -553,7 +553,7 @@ is_completion_enabled() {
 	if [ "$(grep -o "appman" ~/.bash_completion 2>/dev/null | head -1)" == "appman" ]; then
 		echo "AppMan"
 	fi
-	if [ "$(grep -o "appman" $ZDOTDIR/.bash_completion 2>/dev/null | head -1)" == "appman" ]; then
+	if [ "$(grep -o "appman" "$ZDOTDIR"/.bash_completion 2>/dev/null | head -1)" == "appman" ]; then
 		echo "AppMan"
 	fi
 	if test -f /etc/bash_completion.d/am-completion.sh; then
