@@ -2,6 +2,7 @@
 
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 CLI=$(basename "$0")
+AMVERSION="6.6.2"
 
 SCRIPTDIR="$(if command -v xdg-user-dir &>/dev/null; then xdg-user-dir DESKTOP; else echo $HOME; fi)"
 
@@ -415,7 +416,7 @@ case "$1" in
 		;;
 	'-h'|'help')
 		MODULE="help.am"
-		use_module
+		use_module "$@"
 		;;
 	'-H'|'--home'|'--firejail'|'--sandbox')
 		MODULE="sandboxes.am"
@@ -467,7 +468,7 @@ case "$1" in
 		use_module_online "$@"
 		;;
 	'version'|'-v'|'--version')
-		echo "6.6.1-1"
+		echo "$AMVERSION"
 		;;
 	*)
 		exec "$AMCLIPATH"
