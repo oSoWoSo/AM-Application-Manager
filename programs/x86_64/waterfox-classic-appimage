@@ -45,6 +45,10 @@ if test -f /opt/$APP/*.zsync; then
 	zsync /opt/$APP/$APP.zsync
 	rm -R -f /opt/$APP/*zs-old /opt/$APP/*.part
 	chmod a+x /opt/$APP/$APP
+	if [ "$version" != "$version0" ]; then
+		rm -f /opt/$APP/version
+		echo "$version" >> /opt/$APP/version
+	fi
 else
 	if [ $version = $version0 ]; then
 		echo "Update not needed!"
@@ -124,6 +128,5 @@ mv ./squashfs-root/usr/share/icons/hicolor/scalable/apps/*$app* ./icons/$APP 2>/
 rm -R -f /opt/$APP/squashfs-root
 mv ./$APP.desktop /usr/share/applications/AM-$APP.desktop
 
-# CHANGE THE PERMISSIONS
-currentuser=$(who | awk '{print $1}')
-chown -R $currentuser /opt/$APP
+
+

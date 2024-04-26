@@ -29,9 +29,9 @@ function _clean_launchers(){
 
 function _clean_old_modules(){
 	if [ $AMCLI == am ] 2>/dev/null; then
-		MODULES=$(cat /opt/am/APP-MANAGER | grep -Eo '\S*.am\S*' | grep 'modules' | sed 's@.*/@@' | grep -v ";" | grep ".am" | uniq | sort)
+		MODULES=$(cat /opt/am/APP-MANAGER | grep -Eo '\S*.am\S*' | sed 's@.*/@@' | grep -v ";" | grep ".am" | uniq | sort)
 	else
-		MODULES=$(cat "$AMCLIPATH" | grep -Eo '\S*.am\S*' | grep 'modules' | sed 's@.*/@@' | grep -v ";" | grep ".am" | uniq | sort)
+		MODULES=$(cat "$AMCLIPATH" | grep -Eo '\S*.am\S*' | sed 's@.*/@@' | grep -v ";" | grep ".am" | uniq | sort)
 	fi
 	for m in "$APPSPATH"/"$AMCLI"/modules/*; do
 		if [[ "${MODULES}" != *"$(basename -- "$m")"* ]];then
@@ -45,7 +45,8 @@ function _clean_all(){
 	for i in {1000..0000}; do 
 		echo -ne " $i\r" && sleep 0.0001
 	done
-	rm -R -f "$AMPATH"/.cache/* && echo " ◆ Cleaning up the content of $AMPATH/.cache"
+	if [ -z "$CACHEDIR" ] || [ -z "$APPSPATH" ]; then exit 1; fi
+	rm -R -f "$CACHEDIR"/am/* && echo " ◆ Cleaning up the content of $CACHEDIR/am"
 	rm -R -f "$APPSPATH"/*/tmp && echo ' ◆ Removed all '"$APPSPATH"'/*/tmp directories'
 	if test -f "$DATADIR"/applications/AppImages/*.desktop 2> /dev/null; then
 		_clean_launchers && echo ' ◆ Removed orphaned launchers produced with the "--launcher" option'
