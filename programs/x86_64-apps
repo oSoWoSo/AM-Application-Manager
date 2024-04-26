@@ -875,6 +875,7 @@
 ◆ kpat : Klondike, Spider, Free Cell and other Solitaire (installs "kdegames").
 ◆ kreversi : Reversi game (installs "kdegames").
 ◆ krita : A professional FREE and open source painting program (graphics).
+◆ krita-devel : A professional FREE open source painting program (dev-edition).
 ◆ kshisen : A game similar to Mahjongg (installs "kdegames").
 ◆ ksirk : A strategy board game (installs "kdegames").
 ◆ ksnakeduel : A snake race game (installs "kdegames").
@@ -933,6 +934,7 @@
 ◆ lightning-peach-wallet : Wallet for lightning network
 ◆ liground : A mordern Chess Variant Analysis GUI (game).
 ◆ liketaskmanager : Process/performances monitor (CPU, RAM, Disks and Network).
+◆ lime3ds : Nintendo 3DS emulator, continuation of citra.
 ◆ linedancer : Arcade game and entry for Ludum Dare 35.
 ◆ linked : Daily journaling without distraction.
 ◆ linphone : A libre SIP client.

@@ -33,7 +33,7 @@ cat >> /opt/"$APP"/AM-updater << 'EOF'
 APP=deadbeef-devel-appimage
 REPO="Samueru-sama/DeaDBeef-AppImage"
 version0=$(cat /opt/$APP/version)
-version=$(wget -q https://api.github.com/repos/$REPO/releases -O - | grep browser_download_url | grep -i appimage | cut -d '"' -f 4 | head -1)
+version=$(wget -q https://api.github.com/repos/$REPO/releases -O - | grep browser_download_url | grep -i Nightly | cut -d '"' -f 4 | head -1)
 if [ $version = $version0 ]; then
 	echo "Update not needed!"
 else
@@ -72,11 +72,6 @@ sed -i "s#Exec=[^ ]*#Exec=$APP#g; s#Icon=.*#Icon=/opt/$APP/icons/$APP#g" ./"$APP
 mv ./"$APP".desktop /usr/share/applications/AM-"$APP".desktop && mv ./DirIcon ./icons/"$APP" 2>/dev/null
 rm -R -f ./squashfs-root
 
-# CHANGE THE PERMISSIONS
-currentuser=$(who | awk '{print $1}')
-chown -R $currentuser /opt/$APP
 
-# MESSAGE
-echo "
- $APP is provided by https://github.com/$(echo $REPO | sed 's:/[^/]*$::')
-"
+
+
