@@ -87,7 +87,7 @@ Initially the two projects traveled in parallel to each other, until version 5, 
 #### To be more detailed, here is an overview of how apps are installed by "AM" and "AppMan"
 
 Where `$PROGRAM` is the application we're going to install:
-- "AM" (ie the `am` command) installs programs and works at system level (i.e. for all the users). "AM" requires the `sudo` privileges but only to install and remove the app, all the other commands can be executed as a normal user. This allows multiple users of the same system to be able to use the same installed applications. This is what an installation script installs with "AM":
+- "AM" (ie the `am` command) installs programs system-wide. "AM" requires the `sudo` privileges but only to install and remove the app, all the other commands can be executed as a normal user. This allows multiple users of the same system to be able to use the same installed applications. This is what an installation script installs with "AM":
 
       /opt/$PROGRAM/
       /opt/$PROGRAM/$PROGRAM
@@ -349,9 +349,11 @@ to have a list of the installed programs use the option `-f` or `files` (syntax 
 
  `-f`
 
+ `-f --byname`
+
  `-f --less`
  
- DESCRIPTION:	Shows the list of all installed programs, with sizes. With the option "--less" it shows only the number of installed apps.
+ DESCRIPTION:	Shows the list of all installed programs, with sizes. By default apps are sorted by size, use "--byname" to sort by name. With the option "--less" it shows only the number of installed apps.
  ___________________________________________________________________________
  
  `-h`, `help`
@@ -391,9 +393,7 @@ to have a list of the installed programs use the option `-f` or `files` (syntax 
 
  `-l`
 
- `-l --libs`
- 
- DESCRIPTION:	Shows the list of all the apps available in the repository. Adding "--libs" instead shows the list of available third-party libraries.
+ DESCRIPTION:	Shows the list of all the apps available in the repository.
  ___________________________________________________________________________
  
  `-o`, `overwrite`
