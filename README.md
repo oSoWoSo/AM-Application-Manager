@@ -21,7 +21,7 @@
 [Features](#features)
 - [How to enable bash completion](#how-to-enable-bash-completion)
 - [Snapshots: backup your app and restore to a previous version](#snapshots-backup-your-app-and-restore-to-a-previous-version)
-- [Install/update/remove programs without "AM"](#installupdateremove-programs-without-am)
+- [Update/remove programs without "AM"](#updateremove-programs-without-am)
 - [Rollback](#rollback)
 - [Convert old Type2 AppImages to Type3](#convert-old-type2-appimages-to-type3)
 - [Manage local AppImages](#manage-local-appimages)
@@ -36,6 +36,7 @@
 - [Spyware, malware and dangerous software](#spyware-malware-and-dangerous-software)
 - [Stop AppImage prompt to create its own launcher, desktop integration and doubled launchers](#stop-appimage-prompt-to-create-its-own-launcher-desktop-integration-and-doubled-launchers)
 - [The script points to "releases" instead of downloading the latest stable](#the-script-points-to-releases-instead-of-downloading-the-latest-stable)
+- [Wget2 prevents me from downloading apps and modules](#wget2-prevents-me-from-downloading-apps-and-modules)
 - [Wrong download link](#wrong-download-link)
 
 [Related projects](#related-projects)
@@ -236,6 +237,7 @@ A warning message will prevent you from using "AM"/"AppMan" if the following pac
 - "`coreutils`", is usually installed by default in all distributions as it contains basic commands ("`cat`", "`chmod`", "`chown`"...);
 - "`curl`", to check URLs;
 - "`grep`", to check files;
+- "`jq`", to handle JSON files (some scripts need to check a download URL from api.github.com);
 - "`sed`", to edit/adapt installed files;
 - "`wget`" to download all programs and update "AM"/AppMan itself;
 - "`xdg-user-dirs`" to download or manage files in well known local folders;
@@ -660,20 +662,11 @@ All the snapshots are stored into an hidden `/home/$USER/.am-snapshots` folder c
 </details>
 
 ------------------------------------------------------------------------
-### Install/update/remove programs without "AM"
+### Update/remove programs without "AM"
 <details>
   <summary></summary>
 
-"AM" focuses a lot on the autonomy of its programs, so much that you can install, update and remove them without necessarily having "AM" installed on your system.
-- To install a program without "am", replace "SAMPLE" at the line 2 with the name of the program you want to install:
-```
-ARCH=$(uname -m)
-PROGRAM=SAMPLE
-wget https://raw.githubusercontent.com/ivan-hc/AM/main/programs/$ARCH/$PROGRAM
-chmod a+x ./$PROGRAM
- sudo ./$PROGRAM
-```
-- To update a program without "am" instead, just run:
+- To update a program without "am":
 ```
 /opt/$PROGRAM/AM-updater
 ```
@@ -683,8 +676,6 @@ Note that this works only if the program has a /opt/$PROGRAM/AM-updater script, 
 ```
 sudo /opt/$PROGRAM/remove
 ```
-
-***NOTE, to do the same thing but locally, without `sudo`, you must necessarily use "AppMan". Installation scripts are written for system-wide installation only. To convert them to AppMan style installation scripts use the `appman convert {PROGRAM}` command to download and patch them.***
 
 </details>
 
@@ -897,6 +888,25 @@ or do it manually:
 sed -i 's#releases -O -#releases/latest -O -#g' /opt/$PROGRAM/AM-updater
 am -u $PROGRAM
 ```
+
+</details>
+
+------------------------------------------------------------------------
+### Wget2 prevents me from downloading apps and modules
+<details>
+  <summary></summary>
+
+With the arrival of Fedora 40 in April 2024, many users began to complain about the inability to download any application from github and the inability to update modules (see https://github.com/ivan-hc/AM/issues/496). This is because "wget" is no longer actively developed, and its successor "wget2" was not yet ready to take its place immediately. Yet the Fedora team decided to replace it anyway, causing quite a few problems for this project and many others that use api.github.com to function.
+
+Attempts to add patches to avoid having dependencies like `jq` added and to rewrite all the scripts to promptly adapt them to more versatile solutions were in vain.
+
+So I decided to host on this repository the "wget" binaries directly from Debian 12 (see [here](https://github.com/ivan-hc/AM/tree/main/tools/x86_64) and [here](https://github.com/ivan-hc/AM/tree/main/tools/aarch64)), and the installation scripts dedicated to them, for the [x86_64](https://github.com/ivan-hc/AM/blob/main/programs/x86_64/wget) and [aarch64](https://github.com/ivan-hc/AM/blob/main/programs/x86_64/wget) architectures and which use "wget2" to download the executable.
+
+Run the command
+```
+am -i wget
+```
+NOTE, the binary is called from a script in /usr/local/bin that runs "wget" with the "--no-check-certificate" option. It's not the best of solutions, but it's enough to suppress this shortcoming while the compatibility issue between wget and wget2 will not be completely resolved.
 
 </details>
 
