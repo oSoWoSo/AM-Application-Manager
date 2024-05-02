@@ -1,0 +1,17 @@
+title: AM Application Manager
+description: AM Application Manager - Manage 1900+ standalone apps for GNU/Linux
+show_downloads: true
+show_github: true
+google_analytics:
+remote_theme: oSoWoSo/cayman-vb-dark
+# web PNG favicon
+# favicon: logo.svg
+# Icon shown in header. From Fontawesome https://fontawesome.com/icons?m=free
+icon: fas fa-pencil-alt
+# Colour gradient for the header
+# header-colours:
+#  right: "#8a108c"
+#  left: "#cc580c"
+# buttons: [true]
+#  - text: AM
+#    href: https://am.osowoso.org
