@@ -4,11 +4,8 @@ clear
 # 1 Define variables
 progname=${progname:="${0##*/}"}
 version=0.02
-if [ -n "$XDG_CONFIG_HOME" ]; then # Check XDG variable
-	configdir="$XDG_CONFIG_HOME/appman/$progname"
-else
-	configdir="$HOME/.config/appman/$progname" # Fallback if XDG empty
-fi
+# Check XDG variable
+configdir="${XDG_CONFIG_HOME:-$HOME/.config}/appman/$progname"
 config=$configdir/config
 # shellcheck source=/dev/null
 source "$config" >/dev/null 2>&1
