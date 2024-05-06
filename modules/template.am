@@ -43,7 +43,7 @@ while [ -n "$1" ]; do
 		if [ "$arg" == STOP ]; then
 			exit
 		else
-			arg=$(echo "$arg" | tr A-Z a-z)
+			arg=$(echo "$arg" | _make_lower)
 			case $arg in
 				*)
 					_any_argument_used
