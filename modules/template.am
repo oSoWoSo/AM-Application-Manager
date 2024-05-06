@@ -35,10 +35,6 @@ function _do_you_wish_to_check_the_link_to_the_latest_version_yes() {
 	echo -e "\n The URL above is an example of what both\n the install and update scripts will point to.\n"
 }
 
-function () {
-
-}
-
 while [ -n "$1" ]; do
 	rm -f "$AMPATH"/.cache/template-args
 	echo "$@" | tr ' ' '\n' >> "$AMPATH"/.cache/template-args && echo STOP >> "$AMPATH"/.cache/template-args
