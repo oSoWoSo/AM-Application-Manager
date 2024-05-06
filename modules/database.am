@@ -112,15 +112,15 @@ function download_lib() {
 
 function _list(){
 	LIBNUMBER=$(cat "$APPSPATH"/*/remove 2> /dev/null | grep -c "usr/local/lib")
-	ITEMSNUMBER=$(cd "$APPSPATH" && find -name 'remove' -printf "%h\n" 2>/dev/null | sort -u | wc -l)
+	ITEMSNUMBER=$(cd "$APPSPATH" && find . -name 'remove' -printf "%h\n" 2>/dev/null | sort -u | wc -l)
 	if [ "$AMCLI" == am ]; then
 		ITEMSNUMBER=$(("$ITEMSNUMBER"-1))
 	fi
-	APPSNUMBER=$(echo "$(("$ITEMSNUMBER" - "$LIBNUMBER"))")
+	APPSNUMBER=$(("$ITEMSNUMBER" - "$LIBNUMBER"))
 	_check_version
 	if test -f "$AMPATH"/.cache/version-args; then
 		INSTALLED=$(sort < "$AMPATH"/.cache/version-args | sed 's/	|	/ /g' | grep -v "◆ am ")
-		MESSAGE2="\n$INSTALLED\n"
+		MESSAGE2="$INSTALLED"
 	fi
 
 	wget -q --tries=10 --timeout=20 --spider https://github.com
@@ -129,15 +129,15 @@ function _list(){
 	fi
 	if cat "$APPSPATH"/*/remove 2> /dev/null | grep -q 'usr/local/lib'; then
 		if [ "$LIBNUMBER" == 1 ]; then
-			MESSAGE=$(echo " YOU HAVE INSTALLED $APPSNUMBER APPLICATIONS OUT OF $(grep -e "$" -c "$AMPATH"/"$arch"-apps) AVAILABLE, AND $LIBNUMBER LIBRARY")
+			MESSAGE=$(printf ' YOU HAVE INSTALLED %s APPLICATIONS OUT OF %s AVAILABLE, AND %s LIBRARY' "$APPSNUMBER" "$(grep -e "$" -c "$AMPATH"/"$arch"-apps)" "$LIBNUMBER")
 		else
-			MESSAGE=$(echo " YOU HAVE INSTALLED $APPSNUMBER APPLICATIONS OUT OF $(grep -e "$" -c "$AMPATH"/"$arch"-apps) AVAILABLE, AND $LIBNUMBER LIBRARIES")
+			MESSAGE=$(printf ' YOU HAVE INSTALLED %s APPLICATIONS OUT OF %s AVAILABLE, AND %s LIBRARIES' "$APPSNUMBER" "$(grep -e "$" -c "$AMPATH"/"$arch"-apps)" "$LIBNUMBER")
 		fi
 	else
-		MESSAGE=$(echo " YOU HAVE INSTALLED $APPSNUMBER APPLICATIONS OUT OF $(grep -e "$" -c "$AMPATH"/"$arch"-apps) AVAILABLE")
+		MESSAGE=$(printf ' YOU HAVE INSTALLED %s APPLICATIONS OUT OF %s AVAILABLE' "$APPSNUMBER" "$(grep -e "$" -c "$AMPATH"/"$arch"-apps)")
 	fi
-	printf "\n%s\n%s\n LIST OF THE %s APPLICATIONS AVAILABLE IN THE 'AM' REPOSITORY:\n\n%s\n" "$MESSAGE" "$MESSAGE2" "$(grep -e "$" -c "$AMPATH"/"$arch"-apps)" "$(cat "$AMPATH"/"$arch"-apps | _clean_lists_and_queries)" | less -I
-	printf '\n%s\n%s' "$MESSAGE" "$MESSAGE2"
+	printf '\n%s\n\n%s\n\n LIST OF THE %s APPLICATIONS AVAILABLE IN THE "AM" REPOSITORY:\n\n%s\n' "$MESSAGE" "$MESSAGE2" "$(grep -e "$" -c "$AMPATH"/"$arch"-apps)" "$(_clean_lists_and_queries < "$AMPATH"/"$arch"-apps)" | less -I
+	printf '\n%s\n\n%s\n' "$MESSAGE" "$MESSAGE2"
 }
 
 case "$1" in
