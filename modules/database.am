@@ -165,7 +165,7 @@ case "$1" in
 			elif grep -q "◆ $arg : " "$AMPATH/libs-list"; then
 				download_lib "$arg"
 			else
-				printf '%s is not a valid argument\n' "$arg" | tr 'a-z' 'A-Z'
+				printf '%s is not a valid argument\n' "$arg" | _make_upper
 			fi
 		done
 		;;
