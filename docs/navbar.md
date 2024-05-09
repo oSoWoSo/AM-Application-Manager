@@ -1,0 +1,3 @@
+- [Home](docs/README.md)
+- [Contributing](docs/CONTRIBUTING.md)
+- [Docs](docs/)
