@@ -1294,6 +1294,7 @@
 ◆ platform-tools : Suite of command line utilities to manage Android devices.
 ◆ platinum-md-appimage : Graphical MiniDisc NetMD conversion and upload.
 ◆ play-2048 : Another implementation of the 2048 game.
+◆ playerctl : MPRIS media player command-line controller, unofficial AppImage.
 ◆ playbox : An audio playback system for the live production industry.
 ◆ playme : Elegant YouTube Music desktop app.
 ◆ play : PlayStation 2 emulator on your computer or mobile device.
@@ -1315,6 +1316,7 @@
 ◆ pokete : A terminal based Pokemon like game.
 ◆ polar-bookshelf : Personal knowledge repository for PDF and web content.
 ◆ polar : One-click Bitcoin Lightning networks for local app development.
+◆ polybar : Unofficial AppImage of polybar. A fast easy-to-use status bar.
 ◆ polkakey : A secure way to generate Polkadot/Kusama/Edgeware address.
 ◆ polypane : Browser for web developers.
 ◆ pomotroid : Simple and visually-pleasing Pomodoro timer.
