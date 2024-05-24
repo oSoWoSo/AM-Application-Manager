@@ -3,8 +3,8 @@
 # AM INSTALL SCRIPT VERSION 3. 
 
 set -u
-APP=i3-auto-layout
-SITE="pando85/i3-auto-layout"
+APP=i3
+SITE="Samueru-sama/i3-AppImage"
 
 # CREATE DIRECTORIES AND ADD REMOVER
 [ -n "$APP" ] && mkdir -p "/opt/$APP/tmp" && cd "/opt/$APP/tmp" || exit 1
@@ -16,12 +16,11 @@ chmod a+x "/opt/$APP/remove"
 # $version is also used for updates
 
 
-version=$(curl -Ls https://api.github.com/repos/"$SITE"/releases | jq '.' | sed 's/[()",{}]/ /g; s/ /\n/g' | grep -o 'https.*i3-auto-layout.*tar.gz$' | head -1)
+version=$(curl -Ls https://api.github.com/repos/"$SITE"/releases | jq '.' | sed 's/[()",{}]/ /g; s/ /\n/g' | grep -o 'https.*continuous.*i3.*86_64.*mage$' | head -1)
 wget "$version" && echo "$version" > "/opt/$APP/version" || exit 1
-
-tar fx ./*tar* || exit 1
 cd ..
-mv --backup=t ./tmp/"$APP" ./"$APP" && rm -R -f ./tmp || exit 1
+mv --backup=t ./tmp/*"$APP"* ./"$APP"
+rm -R -f ./tmp || exit 1
 chmod a+x "/opt/$APP/$APP" || exit 1
 
 # LINK TO PATH
@@ -30,19 +29,18 @@ ln -s "/opt/$APP/$APP" "/usr/local/bin/$APP"
 # SCRIPT TO UPDATE THE PROGRAM
 cat >> "/opt/$APP/AM-updater" << 'EOF'
 #!/bin/sh
-set -u
-APP=i3-auto-layout
-SITE="pando85/i3-auto-layout"
-version0=$(cat /opt/$APP/version)
-version=$(curl -Ls https://api.github.com/repos/"$SITE"/releases | jq '.' | sed 's/[()",{}]/ /g; s/ /\n/g' | grep -o 'https.*i3-auto-layout.*tar.gz$' | head -1)
+APP=i3
+SITE="Samueru-sama/i3-AppImage"
+if [ -z "$APP" ]; then exit 1; fi
+version0=$(cat "/opt/$APP/version")
+version=$(curl -Ls https://api.github.com/repos/"$SITE"/releases | jq '.' | sed 's/[()",{}]/ /g; s/ /\n/g' | grep -o 'https.*continuous.*i3.*86_64.*mage$' | head -1)
 [ -n "$version" ] || { echo "Error getting link"; exit 1; }
 if [ "$version" != "$version0" ]; then
 	notify-send "A new version of $APP is available, please wait"
 	mkdir "/opt/$APP/tmp" && cd "/opt/$APP/tmp" || exit 1
 	wget "$version" || exit 1
-	tar fx ./*tar* || exit 1
 	cd ..
-	mv --backup=t ./tmp/"$APP" ./"$APP" || exit 1
+	mv --backup=t ./tmp/*"$APP"* ./"$APP" || exit 1
 	echo "$version" > ./version
 	rm -R -f ./tmp ./*~
 	chmod a+x "/opt/$APP/$APP" || exit 1
@@ -51,4 +49,4 @@ if [ "$version" != "$version0" ]; then
 fi
 echo "Update not needed!"
 EOF
-chmod a+x "/opt/$APP/AM-updater" || exit 1
+chmod a+x "/opt/$APP/AM-updater"
