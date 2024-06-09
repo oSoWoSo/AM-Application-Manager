@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-AMVERSION="6.10.2"
+AMVERSION="6.10.4"
 
 # Determine main repository and branch
 AMREPO="https://raw.githubusercontent.com/ivan-hc/AM/main"
@@ -539,6 +539,7 @@ function _generate_options_list() {
 		--home
 		--launcher
 		--less
+		--pkg
 		--rollback
 		--sandbox
 		--silent
