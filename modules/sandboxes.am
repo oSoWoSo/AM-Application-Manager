@@ -136,6 +136,7 @@ case "$1" in
 		--add-file "$CONFIGDIR"/qt6ct \
 		--add-file "$CONFIGDIR"/Kvantum \
 		--add-file "$HOME"/.local/lib \
+		--add-file /usr/share \
 		--rm-file xdg-download \
 		--rm-file xdg-music \
 		--rm-file xdg-pictures \
@@ -164,6 +165,10 @@ case "$1" in
 		read -p " Allow $2 access to ~/Documents? (y/N): " yn
 		if echo "$yn" | grep -i '^y' >/dev/null 2>&1; then
 			$SUDOCOMMAND sed -i "s|--rm-file xdg-documents|--add-file xdg-documents:rw|g" "$TARGET" || exit 1
+		fi
+		read -p " Allow $2 access to ~/Music (y/N): " yn
+		if echo "$yn" | grep -i '^y' >/dev/null 2>&1; then
+			$SUDOCOMMAND sed -i "s|--rm-file xdg-music|--add-file xdg-music:rw|g" "$TARGET" || exit 1
 		fi
 		read -p " Allow $2 access to ~/Pictures (y/N): " yn
 		if echo "$yn" | grep -i '^y' >/dev/null 2>&1; then
