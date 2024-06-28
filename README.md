@@ -229,28 +229,27 @@ This section explains how to install "AM" or "AppMan".
 
 If you don't know the difference, please read "[Differences between "AM" and "AppMan"](#differences-between-am-and-appman)" first.
 
-Below are the essential dependencies for both "AM" and "AppMan":
-- "`coreutils`", is usually installed by default in all distributions as it contains basic commands ("`cat`", "`chmod`", "`chown`"...);
+#### Core dependences
+Below are the **essential system dependencies** that you must install before proceeding:
+- "`coreutils`" (contains "`cat`", "`chmod`", "`chown`"...);
 - "`curl`", to check URLs;
 - "`grep`", to check files;
-- "`jq`", to handle JSON files (some scripts need to check a download URL from api.github.com);
 - "`sed`", to edit/adapt installed files;
-- "`wget`" to download all programs and update "AM"/"AppMan" itself;
+- "`wget`" to download all programs and update "AM"/"AppMan" itself.
 
-NOTE, "AM" require "`sudo`" to be installed.
+#### Dependency only for "AM"
+- "`sudo`", required by "AM" to install/remove programs, sandbox AppImages and enable/disable bash-completion.
 
-If for some reason you don't use `sudo` and you prefer to gain administration privileges using alternative commands such as `doas` or similar, simply use "AppMan".
+NOTE: use "AppMan" for non privileged use or if you prefer to gain administration privileges using alternative commands such as `doas` or similar.
 
-<details>
-  <summary>See also optional dependencies, click here!</summary>
-
-#### Listed below are optional dependencies that are needed only by some programs:
+#### Extra dependences (you may not need them)
+The following are optional dependencies that some programs may require:
 - "`binutils`", contains a series of basic commands, including "`ar`" which extracts .deb packages;
 - "`unzip`", to extract .zip packages;
 - "`tar`", to extract .tar* packages;
 - "`zsync`", about 10% of AppImages depend on this to be updated.
 
-</details>
+### Proceede
 
 - [How to install "AM"](#how-to-install-am)
 - [How to install "AppMan"](#how-to-install-appman)
@@ -1215,12 +1214,35 @@ Before installing any application, try to know where it comes from first. This p
 
 ------------------------------------------------------------------------
 ### Stop AppImage prompt to create its own launcher, desktop integration and doubled launchers
-Some developers insist on creating Appimages that create their own launcher on first launch (like WALC and OpenShot). If the official solution proposed [here](https://discourse.appimage.org/t/stop-appimage-from-asking-to-integrate/488) doesn't work, create a .home directory with the `-H` option, launch the app and accept the request. For example (with "AM"):
+Some developers insist on creating Appimages that create their own launcher on first launch (like WALC and OpenShot). If the official solution proposed [here](https://discourse.appimage.org/t/stop-appimage-from-asking-to-integrate/488) doesn't work, you have two ways to escape this trouble:
+
+##### 1. create a .home directory for the AppImage, with the `-H` option
+Use the option `-H`, then launch the app and accept the request. Dotfiles and launcher will be saved in the $APP.directory near the AppImage:
 ```
-am -H walc
-walc
+am -H $APP
+$APP
 ```
-Accept the integration request, the launcher will be saved in the walc.home directory located next to the AppImage file.
+or
+```
+appman -H $APP
+$APP
+```
+This method works in the 99% of cases. Launch the app and accept the request.
+
+##### 2. sandbox the AppImage
+Use the option `--sandbox`, then launch the app and accept the request. Dotfiles and launcher will be saved in the dedicated sandbox:
+```
+am ---sandbox $APP
+$APP
+```
+or
+```
+appman --sandbox $APP
+$APP
+```
+This is the best method, since you decide wheter to allow the use of user's directories or not.
+
+For more details, see "[**Sandbox an AppImage**](#sandbox-an-appimage)".
 
 ------------------------------------------------------------------------
 
