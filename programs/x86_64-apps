@@ -65,7 +65,6 @@
 ◆ appimagecraft : Powerful build script generator with a focus on AppImages.
 ◆ appimagedl : Easily download AppImages from AppImageHub (unofficial fork).
 ◆ appimagehelper : Create and organize shortcuts for AppImages.
-◆ appimagekit : Install appimagetool, appimageupdatetool and pkg2appimage.
 ◆ appimagelauncher : CLI helper for running and integrating AppImages.
 ◆ appimagelint : Check AppImages for compatibility, best practices etc.
 ◆ appimagen : A script that generates a custom AppImage from a PPA.
@@ -133,7 +132,6 @@
 ◆ bazecor : Graphical configurator for Dygma Raise.
 ◆ bbg-appimage : A static blog generator based on Electron Technology.
 ◆ bdash : A simple business intelligence application.
-◆ beaker-ng : An experimental peer-to-peer Web browser.
 ◆ beam-wallet : Beam Desktop Wallet.
 ◆ beatconnect-client : Beatconnect power for osu irc.
 ◆ beekeeper-studio : SQL query editor and database UI.
@@ -882,6 +880,7 @@
 ◆ kade : A desktop application for Q Methodology.
 ◆ kage : GUI for Metasploit Meterpreter and Session Handler.
 ◆ kaidan : A QtQuick Jabber client.
+◆ kajongg : An ancient Chinese board game for 4 players (installs "kdegames").
 ◆ kanon : Maturita GPJP designed for use with kanon web app.
 ◆ kapman : Pac-Man clone (installs "kdegames").
 ◆ kate : A multi-document editor part of KDE.
@@ -1586,7 +1585,6 @@
 ◆ rustdict : A dictionary CLI tool in Rust inspired by BetaPictoris's dict.
 ◆ rx-bin : A modern and extensible pixel editor implemented in Rust.
 ◆ ryowallet : Modern GUI interface for Ryo Currency.
-◆ ryujinx-appimage : Unofficial AppImage of the Ryujinx emulator.
 ◆ ryujinx : A simple, experimental Nintendo Switch emulator.
 ◆ sabaki : Modern, elegant, cross-platform Go/Baduk/Weiqi game board.
 ◆ saber : A (work-in-progress) cross-platform libre handwritten notes app.
