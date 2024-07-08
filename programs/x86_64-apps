@@ -64,7 +64,6 @@
 ◆ apphub : App that simplifies installation/management of .appImage packages.
 ◆ appimage-builder : GNU/Linux packaging solution using the AppImage format.
 ◆ appimagecraft : Powerful build script generator with a focus on AppImages.
-◆ appimagedl : Easily download AppImages from AppImageHub (unofficial fork).
 ◆ appimagehelper : Create and organize shortcuts for AppImages.
 ◆ appimagelauncher : CLI helper for running and integrating AppImages.
 ◆ appimagelint : Check AppImages for compatibility, best practices etc.
@@ -377,7 +376,6 @@
 ◆ cryptocam-companion : GUI to decrypt videos taken by Cryptocam.
 ◆ cryptomator : Cloud Storage Encryption Utility.
 ◆ cryptr : A GUI for Vault.
-◆ csbooks : Epub reader, pdf reader, mobi book reader and djvu reader.
 ◆ cscrypto : A crypto app.
 ◆ ctool : Common Tools for Program Development.
 ◆ ctop : Top-like interface for container metrics.
@@ -406,7 +404,6 @@
 ◆ debian-testing-avidemux : Unofficial Avidemux built from deb-multimedia.
 ◆ deckboard : Control your PC with your phone in easy way possible.
 ◆ dedop-studio : DeDop Studio
-◆ deemix-gui-appimage : A gui electron app for the deemix lib.
 ◆ deeplx : DeepL Free API (No TOKEN required).
 ◆ deeptags : Markdown notes manager with support for nested tags.
 ◆ deerportal : Full of the diamonds board game.
@@ -508,7 +505,6 @@
 ◆ ember : Client for the WorldForge virtual world system (game).
 ◆ emoji-keyboard-appimage : Virtual keyboard-like emoji palette for Linux.
 ◆ emudeck : EmuDeck Desktop Electron Wrapper.
-◆ emulationstation : A flexible emulator front-end supporting custom themes.
 ◆ en-croissant : The Ultimate Chess Toolkit.
 ◆ encryptpad : Secure text editor and binary encryptor with passwords.
 ◆ endless-sky : Space exploration and combat game.
@@ -524,7 +520,7 @@
 ◆ es-de : EmulationStation Desktop Edition.
 ◆ esearch : Screenshot OCR search translate search for picture paste...
 ◆ espanso : Cross-platform Text Expander written in Rust.
-◆ espi-appimage : Software recreation of the SP-1200 drum machine.
+◆ espi : Software recreation of the SP-1200 drum machine.
 ◆ etcher : Flash OS images to SD cards and USB drives (Balena Etcher).
 ◆ etcher-latest : Flash OS images to SD cards and USB drives (Balena Etcher).
 ◆ eternal-lands : 3D fantasy multiplayer online role playing game.
@@ -559,7 +555,7 @@
 ◆ fastqt : Control tool for high throughput genomics sequence data.
 ◆ fasttrack : Fast tracking of multiple objects.
 ◆ fat-wallet : Wallet for FAT tokens.
-◆ fchat-appimage : The F-Chat 3.0 client.
+◆ fchat : The F-Chat 3.0 client.
 ◆ fchat-rising-appimage : A customized version of mainline F-Chat 3.0 client.
 ◆ f-crm : Customer Relations Management for Freelancers.
 ◆ fd : A simple, fast and user-friendly alternative to 'find'.
@@ -614,7 +610,6 @@
 ◆ flare : Fantasy action RPG game using the FLARE engine.
 ◆ flawesome : Flawesome is a modern productivity tool.
 ◆ flb : A beautiful Feature Rich Music Player and Downloader,cross platform.
-◆ flexvdi-client-appimage : Client for connecting to flexVDI desktops.
 ◆ flightgear-airports : A software to design Flightgear groundnets.
 ◆ flightgear : Free, open source flight simulator developed since 1997.
 ◆ flippy-qualitative-testbench : Music sheet reader.
@@ -624,7 +619,7 @@
 ◆ fmradio : Cross platform FM Radio App for RTL2832U dongles.
 ◆ fms-file-explorer : Access and exploration of data produced.
 ◆ focalizzare : A Timer for Pomodoro Technique.
-◆ focusatwill-appimage : Combines neuroscience and music to boost productivity.
+◆ focusatwill : Combines neuroscience and music to boost productivity.
 ◆ focuswriter : Simple fullscreen word processor.
 ◆ fontbase : A lightning fast, beautiful and free font manager for designers.
 ◆ fontforge : Free (libre) font editor for Windows, Mac OS X and GNU+Linux.
@@ -672,7 +667,6 @@
 ◆ gdlauncher-appimage : Simple, yet powerful Minecraft custom launcher.
 ◆ gdm-settings : A settings app for GNOME's Login Manager, GDM.
 ◆ gedit : The popular GNOME text editor Gedit.
-◆ geeqie : Claiming to be the best image viewer / photo collection browser.
 ◆ geforcenow-electron : Desktop client for Nvidia GeForce NOW game streaming.
 ◆ gemalaya : A keyboard-driven Gemini browser written in QML.
 ◆ genact : A nonsense activity generator.
@@ -717,7 +711,6 @@
 ◆ goland : Capable and Ergonomic Go IDE.
 ◆ goldencheetah : Cycling Power Analysis Software.
 ◆ goldendict : A feature-rich dictionary lookup program.
-◆ goldendict-ng : The Next Generation GoldenDict.
 ◆ gooboxfileshare : Goobox File Share App.
 ◆ goofcord : Take control of your Discord experience with GoofCord.
 ◆ google-chrome-beta : Web Browser (Beta version, Unofficial AppImage).
@@ -799,7 +792,6 @@
 ◆ hyperkeys : Unleash you keyboard shorcuts.
 ◆ hypersomnia : Hardcore arena mixing eSports with pixely nostalgia.
 ◆ hyperspace : A fluffy client for Mastodon in React.
-◆ hypertrader : Trade like a PRO, robust tools to monitor your accounts.
 ◆ i3 : A tiling window manager for X11, unofficial AppImage.
 ◆ i3-auto-layout : Automatic, optimal tiling for i3wm. Fork of dead version.
 ◆ i3lock-color : The world's most popular non-default computer lockscreen.
@@ -824,7 +816,7 @@
 ◆ index-maui : Browse your system files and preview your multimedia.
 ◆ infection-monkey : An automated penetration test tool (security).
 ◆ infinitex : Editor for academics with cryptography.
-◆ infra-appimage : Infra App for Linux.
+◆ infra-app : Infra App for Linux.
 ◆ inkscape-next : Vector-based drawing program (SVG, PDF, AutoCAD...), Unstable.
 ◆ inkscape : Vector-based drawing program (SVG, PDF, AutoCAD...), Stable.
 ◆ insight : The GUI front-end of GDB with Tcl/Tk.
@@ -1587,7 +1579,6 @@
 ◆ sabaki : Modern, elegant, cross-platform Go/Baduk/Weiqi game board.
 ◆ saber : A (work-in-progress) cross-platform libre handwritten notes app.
 ◆ safe-multisig : Allowing crypto users manage funds in a safer way.
-◆ samanager : Manage your Prestashop online Store.
 ◆ saphyr : A C++ like compiler.
 ◆ satisfactory : Satisfactory Mod Manager.
 ◆ saucedacity : Audio editor based on Audacity focusing on general improvements.
@@ -1654,7 +1645,7 @@
 ◆ simplescreenrecorder : Feature-rich screen recorder supporting X11 & OpenGL.
 ◆ simple-timer : A really simple timer with a customizable logo and heading.
 ◆ simplex-chat : First messaging platform operating without user identifiers.
-◆ simtoolkitpro-appimage : The all-in-one flight simulation EFB.
+◆ simtoolkitpro : The all-in-one flight simulation EFB.
 ◆ singlebox : AppView template for WebCatalog.
 ◆ sioyek : PDF viewer designed for reading research papers and technical books.
 ◆ sipgate-softphone : The sipgate softphone is developed directly by sipgate.
@@ -1724,7 +1715,6 @@
 ◆ stackandconquer : A challenging tower conquest board game "Mixtour" inspired.
 ◆ standard-notes : A simple and private place for your notes.
 ◆ starc : Story Architect, reinventing the screenwriting software.
-◆ staruml : A sophisticated software modeler (v3.2.2).
 ◆ stash-electron : The friendly secret storage made for teams.
 ◆ station : A single place for all of your web applications.
 ◆ station-maui : Terminal emulator with quick functions support for touch.
@@ -1746,7 +1736,6 @@
 ◆ storyboarder : Visualize a story as fast you can draw stick figures.
 ◆ strans : A powerful command-line utility.
 ◆ strata : Semi-automated selection and scaling of time series.
-◆ strawberry : Music player and collection organizer (Clementine fork).
 ◆ streamcapture2 : Download video streams.
 ◆ streamdock : Streaming service viewer.
 ◆ streamlink : Command-line which pipes video streams from various services.
