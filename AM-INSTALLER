@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -eu
+set -e
 
 _away_error() {
 	${1} >/dev/null 2>&1
@@ -68,25 +68,33 @@ echo '
 
 # INSTALL "AM" SYSTEM-WIDE
 _install_am() {
-	mkdir -p "$HOME"/.cache
-	rm -f "$HOME"/.cache/INSTALL-AM.sh
-	wget -q https://raw.githubusercontent.com/ivan-hc/AM/main/INSTALL -O "$HOME"/.cache/INSTALL-AM.sh && chmod a+x "$HOME"/.cache/INSTALL-AM.sh || exit 1
-	sudo "$HOME"/.cache/INSTALL-AM.sh && rm -f "$HOME"/.cache/INSTALL-AM.sh
+	CACHEDIR="${XDG_CACHE_HOME:-$HOME/.cache}"
+	mkdir -p "$CACHEDIR" || true
+	rm -f "$CACHEDIR"/INSTALL-AM.sh || true
+	wget -q https://raw.githubusercontent.com/ivan-hc/AM/main/INSTALL -O "$CACHEDIR"/INSTALL-AM.sh && chmod a+x "$CACHEDIR"/INSTALL-AM.sh
+	sudo "$CACHEDIR"/INSTALL-AM.sh && rm -f "$CACHEDIR"/INSTALL-AM.sh
 }
 
 # INSTALL "AM" LOCALLY, AS "APPMAN"
 _install_appman() {
-	ZPROFILE="${ZDOTDIR:-$HOME}/.zprofile"
+	ZSHRC="${ZDOTDIR:-$HOME}/.zshrc"
 	BINDIR="${XDG_BIN_HOME:-$HOME/.local/bin}"
 	mkdir -p "$BINDIR"
-	if [ -e ~/.bash_profile ] && ! grep "$BINDIR" ~/.bash_profile; then
-		printf '\n%s\n' 'export PATH="$PATH:"$BINDIR""' >> ~/.bash_profile
-	elif [ -e ~/.profile ] && ! grep "$BINDIR" ~/.profile; then
-		printf '\n%s\n' 'export PATH="$PATH:"$BINDIR""' >> ~/.profile
+	if ! echo $PATH | grep "$BINDIR" >/dev/null 2>&1; then 
+		echo "Adding $BINDIR to PATH, you might need to close and reopen the terminal for this to take effect"
+		if [ -e ~/.bashrc ] && ! grep 'PATH="$PATH:$BINDIR"' ~/.bashrc >/dev/null 2>&1; then
+			printf '\n%s\n' 'BINDIR="${XDG_BIN_HOME:-$HOME/.local/bin}"' >> ~/.bashrc
+			printf '\n%s\n' 'if ! echo $PATH | grep "$BINDIR" >/dev/null 2>&1; then' >> ~/.bashrc
+			printf '	PATH="$PATH:$BINDIR"\nfi\n' >> ~/.bashrc
+			. ~/.bashrc || true
+		fi
+		if [ -e "$ZPROFILE" ] && ! grep 'PATH="$PATH:$BINDIR"' "$ZSHRC" >/dev/null 2>&1; then
+			printf '\n%s\n' 'BINDIR="${XDG_BIN_HOME:-$HOME/.local/bin}"' >> "$ZSHRC"
+			printf '\n%s\n' 'if ! echo $PATH | grep "$BINDIR" >/dev/null 2>&1; then' >> "$ZSHRC"
+			printf '	PATH="$PATH:$BINDIR"\nfi\n' >> "$ZSHRC"
+			. "$ZSHRC" || true
+		fi
 	fi
-	if [ -e "$ZPROFILE" ] && ! grep "$BINDIR" "$ZPROFILE"; then
-		printf '\n%s\n' "export PATH=\""'$PATH'":$BINDIR\"" >> "$ZPROFILE"
-	fi	
 	wget -q https://raw.githubusercontent.com/ivan-hc/AM/main/APP-MANAGER -O "$BINDIR"/appman && chmod a+x "$BINDIR"/appman
 }
 
