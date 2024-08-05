@@ -394,6 +394,8 @@
 ◆ cutter : Free and Open Source Reverse Engineering Platform.
 ◆ czkawka : App to find duplicates, empty folders, similar images etc.
 ◆ dana : A desktop client for the Dana learning box.
+◆ darktable-nightly : Photography workflow app and raw developer (nightly).
+◆ darktable : Photography workflow app and raw developer.
 ◆ dashy-app : Dashboard creation application.
 ◆ database-dossier : A User Interface for your databases.
 ◆ dataset-annotator : An annotation tool for a dataset.
@@ -1575,6 +1577,7 @@
 ◆ rclone-browser : Simple cross platform GUI for rclone.
 ◆ reactotron : Reactotron desktop mode engage.
 ◆ realm-studio : A tool for everything Realm.
+◆ recoll : Full-text search for your desktop.
 ◆ record-compare : Record Compare.
 ◆ redeclipse : A great first person 3D arena shooter with online support (game).
 ◆ redis-gui : Modern graphical user interface to peek into redis DB.
