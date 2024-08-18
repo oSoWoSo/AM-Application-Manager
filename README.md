@@ -5,7 +5,8 @@
 
 | [<img src="https://github.com/user-attachments/assets/8f98fd3e-d94e-4b58-925d-e2ae8ff3a50c">](https://github.com/ivan-hc/AM) | [<img src="https://github.com/user-attachments/assets/2c3affbd-5f0d-4092-b12f-a12c2d9566bc">](https://github.com/ivan-hc/AM) | [<img src="https://github.com/user-attachments/assets/ebff562a-7692-4bbd-a5c5-68967a98a60b">](https://github.com/ivan-hc/AM) |
 | - | - | - |
-| [<img src="https://github.com/user-attachments/assets/d0f15dd8-1175-4454-87b0-bf1b3e348e30">](https://github.com/ivan-hc/AM) | [<img src="https://github.com/user-attachments/assets/ca558c39-6354-4933-8c99-85f8fd1c3730">](https://github.com/ivan-hc/AM) | [<img src="https://github.com/user-attachments/assets/40d90713-316e-4df1-be9a-edd15827bc60">](https://github.com/ivan-hc/AM) |
+| [<img src="https://github.com/user-attachments/assets/deff2450-cb70-4d36-a8c8-6d80d16987ed">](https://github.com/ivan-hc/AM) | [<img src="https://github.com/user-attachments/assets/ca558c39-6354-4933-8c99-85f8fd1c3730">](https://github.com/ivan-hc/AM) | [<img src="https://github.com/user-attachments/assets/40d90713-316e-4df1-be9a-edd15827bc60">](https://github.com/ivan-hc/AM) |
+| [<img src="https://github.com/user-attachments/assets/ff38a91f-7698-4498-bd46-40f0a69e32f9">](https://github.com/ivan-hc/AM) | [<img src="https://github.com/user-attachments/assets/5886ba67-a337-435d-ac50-b280bc2cf7f8">](https://github.com/ivan-hc/AM) | [<img src="https://github.com/user-attachments/assets/dfbcf06a-17e2-4fef-b28c-777f4b55565e">](https://github.com/ivan-hc/AM) |
 
 </div>
 
@@ -806,8 +807,11 @@ This section is committed to giving small demonstrations of each available optio
   - [Third-party databases for applications (NeoDB)](#third-party-databases-for-applications-neodb)
 
 __________________________________________________________________________
-### Install applications
-Option `-i` or `install`, usage:
+## Install applications
+The option `-i` or `install` is the one responsible of the installation of apps or libraries.
+
+### Install, normal behaviour
+This is the normal syntax:
 ```
 am -i $PROGRAM
 ```
@@ -815,9 +819,39 @@ or
 ```
 appman -i $PROGRAM
 ```
-in this video I'll install AnyDesk and LXtask:
+in this video I'll install AnyDesk:
 
-https://github.com/ivan-hc/AM/assets/88724353/c2e8b654-29d3-4ded-8877-f77ef11d58fc
+https://github.com/user-attachments/assets/62bc7444-8b1f-4db2-b23b-db7219eec15d
+
+### Install, debug an installation script
+The "install.am" module contains some patches to disable long messages. You can see them with the suboption `--debug`:
+```
+am -i --debug $PROGRAM
+```
+or
+```
+appman -i --debug $PROGRAM
+```
+let test again the installation of AnyDesk using the `--debug` flag:
+
+https://github.com/user-attachments/assets/9dd73186-37e2-4742-887e-4f98192bd764
+
+### Install the "latest" stable release instead of the latest "unstable"
+By default, many installation scripts for apps hosted on github will point to the more recent generic release instead of "latest", which is normally used to indicate that the build is "stable". This is because upstream developers do not always guarantee a certain packaging format in "latest", sometimes they may only publish packages for Windows or macOS, so pointing to "latest" would not guarantee that any package for Linux will be installed.
+
+On the other hand, if you know that the upstream developer will always guarantee a Linux package in "latest" and "AM" instead points to a potentially unstable development version (Alpha, Beta, RC...), this is the syntax to adopt:
+```
+am -i --force-latest $PROGRAM
+```
+or
+```
+appman -i --force-latest $PROGRAM
+```
+in this video I'll install "SqliteBrowser" using the `--force-latest` flag:
+
+https://github.com/user-attachments/assets/ee29adfd-90e1-46f7-aed9-b9c410f68776
+
+See also "[The script points to "releases" instead of downloading the latest stable](#the-script-points-to-releases-instead-of-downloading-the-latest-stable)".
 
 ------------------------------------------------------------------------
 
@@ -970,21 +1004,46 @@ https://github.com/ivan-hc/AM/assets/88724353/4d26d2d7-4476-4322-a0ab-a0a1ec14f7
 
 __________________________________________________________________________
 ### Convert Type2 AppImages requiring libfuse2 to New Generation AppImages
-Option `nolibfuse` "just tries" to convert old Type2 AppImages asking for "libfuse2" into new generation AppImages:
+Option `nolibfuse` converts old Type2 AppImages asking for "libfuse2" into new generation AppImages:
+```
+am nolibfuse $PROGRAM
+```
+or
+```
+appman nolibfuse $PROGRAM
+```
+in this example, I'll convert Libreoffice and Kdenlive:
 
-https://github.com/ivan-hc/AM/assets/88724353/06b8e946-ef02-4678-a5a0-d8c2c24c22f9
+https://github.com/user-attachments/assets/494d0d92-f46c-4d4e-b13d-f1d01168fb8f
 
-First the selected program type is checked, if it is a Type2 AppImage, it will be extracted and repackaged using the new version of `appimagetool` from https://github.com/probonopd/go-appimage :
-- if the update occurs through "comparison" of versions, the converted AppImage will be replaced by the upstream version and the command is added within the application's AM-updater script, so as to automatically start the conversion at each update (prolonging the update time, depending on the size of the AppImage);
-- instead, if the installed AppImage can be updated via `zsync`, **this may no longer be updatable**.
+As you can see, the file sizes are also smaller than before.
 
-**I suggest anyone to contact the developers to update the packaging method of their AppImage!**
+This process only works for old AppImages that still depend on "libfuse2", other files will be ignored.
 
-NOTE, the conversion is not always successful, a lot depends on how the program is packaged. The conversion occurs in two steps:
-1. if in the first case it succeeds without problems, the package will be repackaged as a new generation one;
-2. if the script encounters problems (due to Appstream validation), it will attempt to delete the contents of the /usr/share/metainfo directory inside the AppImage, as a workaround.
+The original AppImage will be extracted using the `--appimage-extract` option, and then repackaged using `appimagetool` from https://github.com/AppImage/appimagetool 
 
-If also the second step does not succeed either, the process will end with an error and the AppImage will remain Type2.
+#### Updating converted AppImages
+The `nolibfuse` option adds the following lines at the end of the AM-updater script
+```
+echo y | am nolibfuse $APP
+notify-send "$APP has been converted too! "
+```
+or
+```
+echo y | appman nolibfuse $APP
+notify-send "$APP has been converted too! "
+```
+so if an update happens through "comparison" of versions, the converted AppImage will be replaced by the upstream version and then the `nolibfuse` option will automatically start the conversion (prolonging the update time, depending on the size of the AppImage). In this example, I update all the apps, including the original Avidemux, that is an old Type2 AppImage:
+
+https://github.com/user-attachments/assets/03683d8b-32d8-4617-83e3-5278e33b46f4
+
+Instead, if the installed AppImage can be updated via `zsync`, **this may no longer be updatable**, anyway a solution may be the use of `appimageupdatetool`, at https://github.com/AppImageCommunity/AppImageUpdate .
+
+The `nolibfuse` option has been improved since version 7.8, so everyone can say goodbye to the old "libfuse2" dependence.
+
+Anyway, **I suggest anyone to contact the developers to update the packaging method of their AppImage!** This is also a way to keep open source projects alive: your participation through feedback to the upstream.
+
+The `nolibfuse` option is not intended to replace the work of the owners of these AppImage packages, but to encourage the use of AppImage packages on systems that do not have "libfuse2", a library that is now obsolete and in fact no longer available out-of-the-box by default in many distributions, first and foremost Ubuntu and Fedora.
 
 ------------------------------------------------------------------------
 
@@ -1399,6 +1458,8 @@ sed -i 's#releases -O -#releases/latest -O -#g' /opt/$PROGRAM/AM-updater
 am -u $PROGRAM
 ```
 
+See also "[Install the "latest" stable release instead of the latest "unstable"](#install-the-latest-stable-release-instead-of-the-latest-unstable)".
+
 ------------------------------------------------------------------------
 ### Wrong download link
 The reasons may be two:
@@ -1414,7 +1475,7 @@ The reasons may be two:
 # Related projects
 #### External tools and forks used in this project
 - [aisap](https://github.com/mgord9518/aisap), sandboxing solutions for AppImages
-- [appimagetool/go-appimage](https://github.com/probonopd/go-appimage), get rid of libfuse2 from your AppImages
+- [appimagetool](https://github.com/AppImage/appimagetool), get rid of libfuse2 from your AppImages
 - [pkg2appimage](https://github.com/AppImage/pkg2appimage), create AppImages on the fly from existing .deb packages
 - [repology](https://github.com/repology), the encyclopedia of all software versions
 
