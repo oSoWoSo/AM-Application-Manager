@@ -364,14 +364,6 @@ function _check_version_if_an_updater_exists() {
 	fi
 }
 
-function _check_version_if_amcli() {
-	APPVERSION="$AMVERSION"
-}
-
-function _check_version_if_firefox_webapp() {
-	APPVERSION="WebApp"
-}
-
 function _check_version_if_library() {
 	LIBNAME=$(sort "$APPSPATH"/"$arg"/remove | tr ' ' '\n' | grep "usr/local/lib" | head -1 | sed 's:.*/::')
 	APPVERSION=$(find /usr/local/lib -type f -name "$LIBNAME" -type f | sed 's:.*.so.::' | tail -1)
@@ -379,10 +371,6 @@ function _check_version_if_library() {
 
 function _check_version_if_binary_in_place() {
 	APPVERSION=$(date -r ./"$arg"/"$arg" "+%Y.%m.%d")
-}
-
-function _check_version_if_no_version_found() {
-	APPVERSION="unknown"
 }
 
 function _check_version() {
@@ -399,21 +387,21 @@ function _check_version() {
 			elif test -f ./"$arg"/updater 2>/dev/null; then
 				_check_version_if_an_updater_exists
 			elif [ "$arg" = "$AMCLI" ]; then
-				_check_version_if_amcli
+				APPVERSION="$AMVERSION"
 			elif grep -qi "version=" ./"$arg"/* 2>/dev/null; then
 				_check_version_if_any_version_reference_is_somewhere
 			elif echo "$arg" | grep -q "ffwa-"; then
-				_check_version_if_firefox_webapp
+				APPVERSION="WebApp"
 			elif grep -q "usr/local/lib" "$APPSPATH"/"$arg"/remove 2> /dev/null; then
 				_check_version_if_library
 			else
-				_check_version_if_no_version_found
+				APPVERSION="unknown"
 			fi
 			if [ -z "$APPVERSION" ]; then
 				if test -f ./"$arg"/"$arg" 2>/dev/null; then
 					_check_version_if_binary_in_place
 				else
-					_check_version_if_no_version_found
+					APPVERSION="unknown"
 				fi
 			fi
 			echo " ◆ $arg	|	$APPVERSION" >> "$AMCACHEDIR"/version-args
@@ -456,14 +444,14 @@ ghapikey_file="$AMDATADIR/ghapikey.txt"
 function _use_apikey() {
 	case $2 in
 	'del'|'delete'|'remove')
-		[ -f "$ghapikey_file" ] && rm -f "$ghapikey_file" &&
-		echo " ✔ $ghapikey_file has been removed" || echo " ✖ No file named $ghapikey_file has been found"
-		exit
+		[ -f "$ghapikey_file" ] || { echo " ✖ No file named $ghapikey_file has been found"; exit 1; }
+		rm -f "$ghapikey_file" && echo " ✔ $ghapikey_file has been removed" 
+		exit 0
 	esac
 	if [[ "$2" =~ ^(gh[ps]_[a-zA-Z0-9]{36}|github_pat_[a-zA-Z0-9]{22}_[a-zA-Z0-9]{59})$ ]]; then
 		test_apikey_output_with_wget=$(curl -Ls --header "Authorization: token $2" 'https://api.github.com/repos/ivan-hc/AM/releases' | head -1)
-		[ -n "$test_apikey_output_with_wget" ] && echo "$2" > "$ghapikey_file" &&
-		echo "Validation successful!" || echo "ERROR: This is not a valid key!"
+		[ -n "$test_apikey_output_with_wget" ] && echo "$2" > "$ghapikey_file" \
+			&& echo "Validation successful!" || echo "ERROR: This is not a valid key!"
 	else
 		echo "ERROR: Wrong expression, validation failed!"
 	fi
