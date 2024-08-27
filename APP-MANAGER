@@ -57,7 +57,8 @@ function _clean_amcachedir() {
 
 # "APPMAN" CORE VARIABLES AND FUNCTIONS
 function _appman_check() {
-	if [ -f "$APPMANCONFIG"/appman-config ]; then # Convert old config
+	if [ -f "$APPMANCONFIG"/appman-config ] && ! grep "^/" "$APPMANCONFIG"/appman-config; then
+		echo " Converting old config"
 		OLDAPPSDIR=$(head -1 "$APPMANCONFIG"/appman-config 2>/dev/null)
 		echo "$HOME/$OLDAPPSDIR" > "$APPMANCONFIG"/appman-config || exit 1
 	fi
@@ -80,7 +81,7 @@ function _appman_check() {
 		if ! echo "$location" | grep "^/" >/dev/null 2>&1; then
 			location="$HOME/$location"
 		fi
-		if [ "$location" = "$BINDIR" ]; then
+		if echo "$location" | grep "$BINDIR" >/dev/null 2>&1; then
 			echo "$DIVIDING_LINE"
 			echo " 💀 ERROR, you can't install applications in \"$BINDIR\""
 			echo " $BINDIR is normally used for executables, Please choose a different path and retry!" 
