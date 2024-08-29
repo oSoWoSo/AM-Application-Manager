@@ -15,7 +15,7 @@
 ◆ advanced-rest-client : Advanced REST Client and API console, by Mulesoft.
 ◆ affine-beta : Next-gen knowledge base that brings planning, sorting and creating.
 ◆ affine-canary : Next-gen knowledge base that brings planning/sorting/creating.
-◆ affine : Next-gen knowledge base that brings planning, sorting and creating. 
+◆ affine : Next-gen knowledge base that brings planning, sorting and creating.
 ◆ agregore : A minimal browser for the distributed web, Desktop version.
 ◆ ai-bot-workspace : Electron app including testing workspaces.
 ◆ aichat : AIO AI CLI tool integrating 20+ AI platforms, including OpenAI.
@@ -26,6 +26,7 @@
 ◆ aisap : Tool to make sandboxing AppImages easy through bwrap/bubblewrap.
 ◆ aisleriot : Unofficial. A card game featuring over 80 different solitaire-type card games.
 ◆ akasha : AKASHA community client.
+◆ akuse : Simple and easy to use anime streaming desktop app without ads.
 ◆ alduin : An Atom and RSS feed aggregator.
 ◆ alephium-wallet : The official Alephium wallet for desktop.
 ◆ alexandria : eBook reader built with Tauri, Epub.js, and Typescript.
@@ -66,6 +67,7 @@
 ◆ apifox : API manager, in chinese. 文档、API 调试、API Mock、API 自动化测试
 ◆ apk-editor-studio : Easy to use APK, Android reverse-engineering tool.
 ◆ apla : Project was bootstrapped with Create React App.
+◆ appflowy : Bring projects, wikis, and teams together with AI. Alternative to Notion.
 ◆ apphub : App that simplifies installation/management of .appImage packages.
 ◆ appimage-builder : GNU/Linux packaging solution using the AppImage format.
 ◆ appimagecraft : Powerful build script generator with a focus on AppImages.
