@@ -2,8 +2,8 @@
 
 # AM INSTALL SCRIPT VERSION 3.5
 set -u
-APP=retroarch
-SITE="hizzlekizzle/RetroArch-AppImage"
+APP=pcsx-redux
+SITE="grumpycoders/pcsx-redux"
 
 # CREATE DIRECTORIES AND ADD REMOVER
 [ -n "$APP" ] && mkdir -p "/opt/$APP/tmp" "/opt/$APP/icons" && cd "/opt/$APP/tmp" || exit 1
@@ -12,13 +12,13 @@ printf '\n%s' "rm -f /usr/local/share/applications/$APP-AM.desktop" >> ../remove
 chmod a+x ../remove || exit 1
 
 # DOWNLOAD AND PREPARE THE APP, $version is also used for updates
-version=$(wget -q https://repology.org/project/retroarch/versions -O - | grep "newest version" | head -1 | grep -o -P '(?<=">).*(?=</a)' | sed 's/^.*>//')
-wget "$(curl -Ls https://api.github.com/repos/hizzlekizzle/RetroArch-AppImage/releases | sed 's/[()",{} ]/\n/g' | grep -oi "https.*mage$" | grep -vi "i386\|i686\|aarch64\|arm64\|armv7l" | head -1)" || exit 1
-#wget "$version.zsync" 2> /dev/null # Comment out this line if you want to use zsync
-# Use tar fx ./*tar* here for example in this line in case a compressed file is downloaded.
+version=$(echo "https://distrib.app$(curl -Ls https://distrib.app/storage/manifests/pcsx-redux/dev-linux-x64/manifest-$(curl -Ls https://distrib.app/storage/manifests/pcsx-redux/dev-linux-x64/manifest.json | grep id | head -1 | grep -o '[[:digit:]]*').json | tr '"' '\n' | grep -i "linux.*.zip")")
+wget "$version" || exit 1
+# Keep this space in sync with other installation scripts
+unzip -qq ./*.zip
 cd ..
 mv ./tmp/*mage ./"$APP"
-mv ./tmp/*.zsync ./"$APP".zsync 2>/dev/null
+# Keep this space in sync with other installation scripts
 rm -R -f ./tmp || exit 1
 echo "$version" > ./version
 chmod a+x ./"$APP" || exit 1
@@ -30,19 +30,18 @@ ln -s "/opt/$APP/$APP" "/usr/local/bin/$APP"
 cat >> ./AM-updater << 'EOF'
 #!/bin/sh
 set -u
-APP=retroarch
-SITE="hizzlekizzle/RetroArch-AppImage"
+APP=pcsx-redux
+SITE="grumpycoders/pcsx-redux"
 version0=$(cat "/opt/$APP/version")
-version=$(wget -q https://repology.org/project/retroarch/versions -O - | grep "newest version" | head -1 | grep -o -P '(?<=">).*(?=</a)' | sed 's/^.*>//')
+version=$(echo "https://distrib.app$(curl -Ls https://distrib.app/storage/manifests/pcsx-redux/dev-linux-x64/manifest-$(curl -Ls https://distrib.app/storage/manifests/pcsx-redux/dev-linux-x64/manifest.json | grep id | head -1 | grep -o '[[:digit:]]*').json | tr '"' '\n' | grep -i "linux.*.zip")")
 [ -n "$version" ] || { echo "Error getting link"; exit 1; }
-if [ "$version" != "$version0" ] || [ -e /opt/"$APP"/*.zsync ]; then
+if [ "$version" != "$version0" ]; then
 	mkdir "/opt/$APP/tmp" && cd "/opt/$APP/tmp" || exit 1
-	[ -e ../*.zsync ] || notify-send "A new version of $APP is available, please wait"
-	[ -e ../*.zsync ] && wget "$version.zsync" 2>/dev/null || { wget "$(curl -Ls https://api.github.com/repos/hizzlekizzle/RetroArch-AppImage/releases/latest | sed 's/[()",{} ]/\n/g' | grep -oi "https.*mage$" | grep -vi "i386\|i686\|aarch64\|arm64\|armv7l" | head -1)" || exit 1; }
-	# Use tar fx ./*tar* here for example in this line in case a compressed file is downloaded.
+	notify-send "A new version of $APP is available, please wait"
+	wget "$version" || exit 1
+	unzip -qq ./*.zip
 	cd ..
-	mv ./tmp/*.zsync ./"$APP".zsync 2>/dev/null || mv --backup=t ./tmp/*mage ./"$APP"
-	[ -e ./*.zsync ] && { zsync ./"$APP".zsync || notify-send -u critical "zsync failed to update $APP"; }
+	mv --backup=t ./tmp/*mage ./"$APP"
 	chmod a+x ./"$APP" || exit 1
 	echo "$version" > ./version
 	rm -R -f ./*zs-old ./*.part ./tmp ./*~
