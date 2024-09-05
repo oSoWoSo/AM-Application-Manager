@@ -107,9 +107,17 @@ function _downgrade() {
 
 # ICON THEME CHANGER
 function _icon_theme_export_to_datadir() {
-	[ -d "$APPSPATH/$arg/icons" ] && mkdir -p "$DATADIR"/icons \
-	&& find "$APPSPATH"/"$arg"/icons -type f ! -name "*.*" -exec cp {} {}.png \; \
-	&& rsync -avq "$APPSPATH"/"$arg"/icons/*.png "$DATADIR"/icons/ && rm -f "$APPSPATH"/"$arg"/icons/*.png
+	PNG="$(file "$APPSPATH"/*/icons/* | grep -i '.png' | awk -F":" '{print $1}' | grep -vi .png)"
+	SVG="$(file "$APPSPATH"/*/icons/* | grep -i '.svg' | awk -F":" '{print $1}' | grep -vi .svg)"
+	for file in $PNG; do
+		ln -s "$file" "${file}".png
+	done
+	for file in $SVG; do
+		ln -s "$file" "${file}".svg
+	done
+	mkdir -p "$DATADIR"/icons/hicolor/scalable/apps
+	find "$DATADIR"/icons/hicolor/scalable/apps -xtype l -exec rm {} \;
+	ln -s "$APPSPATH"/*/icons/*.* "$DATADIR"/icons/hicolor/scalable/apps
 }
 
 function _icon_theme() {
@@ -118,7 +126,7 @@ function _icon_theme() {
 	else
 		sed -i "s#Icon=$APPSPATH/$arg/icons/#Icon=#g" "$DATADIR"/applications/"$arg"*AM.desktop 2>/dev/null
 	fi
-	_icon_theme_export_to_datadir
+	_icon_theme_export_to_datadir 2>/dev/null
 }
 
 # LAUNCHER
@@ -306,6 +314,7 @@ function _remove() {
 		sleep 0.1
 		echo -e " \"${Green}$2\033[0m\" has been removed!"
 	fi
+	[ -d "$DATADIR"/icons/hicolor/scalable/apps ] && find "$DATADIR"/icons/hicolor/scalable/apps -xtype l -exec rm {} \;
 }
 
 function _hard_remove() {
@@ -318,6 +327,7 @@ function _hard_remove() {
 	$SUDOCMD "$APPSPATH"/"$arg"/remove || return 1
 	sleep 0.1
 	echo -e " \"${Green}$2\033[0m\" has been removed!"
+	[ -d "$DATADIR"/icons/hicolor/scalable/apps ] && find "$DATADIR"/icons/hicolor/scalable/apps -xtype l -exec rm {} \;
 }
 
 ###########################################################################
@@ -352,12 +362,19 @@ case "$1" in
 		# Place local AppImages into the menu by dragging and dropping them into the terminal
 		if [ "$2" = "--all" ]; then
 			ARGS=$(find . -name 'remove' -printf "%h\n" 2>/dev/null | du -sh -- * 2>/dev/null | sort -rh | sed 's@.*	@@')
+			read -r -p " ◆ Do you wish to allow custom icon theming for ALL the apps? (y,N) " yn
 		else
 			ARGS="$(echo "$@" | cut -f2- -d ' ')"
+			read -r -p " ◆ Do you wish to allow custom icon theming for the selected apps? (y,N) " yn
 		fi
-		for arg in $ARGS; do
-			_icon_theme "${@}"
-		done
+		if echo "$yn" | grep -i '^y' >/dev/null 2>&1; then
+			for arg in $ARGS; do
+				_icon_theme "${@}"
+			done
+			echo " ✔ Success!"
+		else
+			echo " ✖ Aborted!"
+		fi
 		;;
 
 	'launcher'|'--launcher')
