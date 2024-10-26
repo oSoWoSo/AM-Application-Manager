@@ -2,7 +2,7 @@
 
 # AM INSTALL SCRIPT VERSION 3.5
 set -u
-APP=teamviewer
+APP=teamviewer-qs
 SITE="https://www.teamviewer.com"
 
 # CREATE DIRECTORIES AND ADD REMOVER
@@ -21,16 +21,16 @@ cd ..
 if [ -d ./tmp/* 2>/dev/null ]; then mv ./tmp/*/* ./; else mv ./tmp/* ./"$APP" 2>/dev/null || mv ./tmp/* ./; fi
 rm -R -f ./tmp || exit 1
 echo "$version" > ./version
-chmod a+x ./$APP || exit 1
+chmod a+x ./tv_bin/script/$APP || exit 1
 
 # LINK TO PATH
-ln -s "/opt/$APP/$APP" "/usr/local/bin/$APP"
+ln -s "/opt/$APP/tv_bin/script/$APP" "/usr/local/bin/$APP"
 
 # SCRIPT TO UPDATE THE PROGRAM
 cat >> ./AM-updater << 'EOF'
 #!/bin/sh
 set -u
-APP=teamviewer
+APP=teamviewer-qs
 SITE="https://www.teamviewer.com"
 version0=$(cat "/opt/$APP/version")
 version=$(wget -q https://repology.org/project/teamviewer/versions -O - | grep -i "new.*version" | head -1 | tr '><' '\n' | grep "^[0-9]")
@@ -44,7 +44,7 @@ if [ "$version" != "$version0" ]; then
 	[ -e ./*zip ] && unzip -qq ./*zip 1>/dev/null && rm -f ./*zip
 	cd ..
 	if [ -d ./tmp/* 2>/dev/null ]; then mv --backup=t ./tmp/*/* ./; else mv --backup=t ./tmp/* ./"$APP" 2>/dev/null || mv --backup=t ./tmp/* ./; fi
-	chmod a+x ./"$APP" || exit 1
+	chmod a+x ./tv_bin/script/"$APP" || exit 1
 	echo "$version" > ./version
 	rm -R -f ./tmp ./*~
 	notify-send "$APP is updated!"
@@ -60,7 +60,7 @@ wget https://www.teamviewer.com/etc.clientlibs/teamviewer/clientlibs/clientlib-r
 
 # LAUNCHER
 echo "[Desktop Entry]
-Name=TeamViewer
+Name=TeamViewer QuickSupport
 Exec=$APP
 Icon=/opt/$APP/icons/$APP
 Type=Application
