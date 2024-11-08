@@ -1446,6 +1446,7 @@
 ◆ ncspot : Cross-platform ncurses Spotify client written in Rust, inspired by ncmpc and the likes.
 ◆ neanes : A scorewriter for notating Byzantine chant in Byzantine notation.
 ◆ neko : Neko is a cross-platform cursor-chasing cat.
+◆ neohtop : htop on steroids.
 ◆ neon : Light wallet for NEO blockchain.
 ◆ neovide : No Nonsense Neovim Client in Rust
 ◆ nepaliunicode : An Unicode Converter app.
