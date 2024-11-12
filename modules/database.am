@@ -30,7 +30,7 @@ _about_page() {
 	package_name="${Green}$1\033[0m"
 	markdown_url="$AMCATALOGUEMARKDOWNS/${1}.md"
 	printf " PACKAGE: %b\n" "$package_name"
-	app_name=$(echo "$1" | sed 's/-appimage//g; s/debian-testing-//g; s/\.toolpack//g')
+	app_name=$(echo "$1" | sed 's/-appimage//g; s/debian-testing-//g; s/\.toolpack//g; s/\.dwfs.appbundle//g; s/\.appbundle//g')
 	argpath=$(echo "$ARGPATHS" | grep "/$app_name$")
 	if [ -f "$argpath/remove" ]; then
 		app_status="installed\033[0m"
@@ -364,6 +364,7 @@ _list_appimages() {
 _list_toolpacks() {
 	# Determine the number of available apps
 	if ! test -f "$AMCACHEDIR/$ARCH-toolpack"; then
+		_online_check
 		toolpack_md=$(curl -Ls "$toolpack_readme" | grep -v "\.appimage ")
 		TOOLPACK_NAMES=$(echo "$toolpack_md" | cut -d' ' -f2- | awk '{print $1}')
 		for toolpack in $TOOLPACK_NAMES; do
