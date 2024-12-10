@@ -38,12 +38,11 @@ _convert_to_appman_compatible_script() {
 _download() {
 	if curl --output /dev/null --silent --head --fail "$APPSDB/$arg"  1>/dev/null; then
 		cd "$SCRIPTDIR" || return 1
-		[ ! -f ./"$arg" ] && wget -q "$APPSDB/$arg" || return 1
-		echo " ◆ \"$arg\" installation script downloaded! "
-	elif curl --output /dev/null --silent --head --fail "$AMREPO/testing/$ARCH/$arg"  1>/dev/null; then
-		cd "$SCRIPTDIR" || return 1
-		[ ! -f ./"$arg" ] && wget -q "$AMREPO/testing/$ARCH/$arg" || return 1
-		echo " ⚠️ \"$arg\" downloaded from \"testing\", the unstable branch, BE AWARE!"
+		if [ -f ./"$arg" ] || [ -d ./"$arg" ]; then
+			echo "✖ \"$SCRIPTDIR/$arg\" already exists!" | _fit && return 1
+		else
+			wget -q "$APPSDB/$arg" && echo "◆ \"$arg\" installation script downloaded to \"$SCRIPTDIR\"! " | _fit
+		fi
 	else
 		echo " 💀 ERROR: \"$arg\" is NOT a valid argument"
 	fi
