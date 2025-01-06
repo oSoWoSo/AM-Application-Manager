@@ -1,0 +1,80 @@
+ 		am -a {PROGRAM}
+ 		am -b {PROGRAM}
+ 		am -c
+ 		am -C {PROGRAM}
+ 		am --rollback {PROGRAM}
+ 		am -d {PROGRAM}
+ 		am -d --convert {PROGRAM}
+ "am -i '/path/to/script'" command or enter the directory of the 
+ script and run the "am -i ./script" command, even using dedicated 
+ 		am -e user/project {APPNAME}
+ 		am -e user/project {APPNAME} {KEYWORD}
+ 		am -f
+ 		am -f --byname
+ 		am -f --less
+ 		am -h
+ 		am -H {PROGRAM}
+ 		am --icons {PROGRAM}
+ 		am --icons --all
+ 		am -i {PROGRAM}
+ 		am -i --debug {PROGRAM}
+ 		am -i --force-latest {PROGRAM}
+ 		am -i --icons {PROGRAM}
+ 		am -i --sandbox {PROGRAM}
+ 		am -ia {PROGRAM}
+ 		am -ia --debug {PROGRAM}
+ 		am -ia --force-latest {PROGRAM}
+ 		am -ia --icons {PROGRAM}
+ 		am -ia --sandbox {PROGRAM}
+ 		am -ias {PROGRAM}
+ 		am -l
+ 		am -l --all
+ 		am -l --appimages
+ 		am -l --toolpack {KEYWORD}
+ 		am -o {PROGRAM}
+ 		am -q {KEYWORD}
+ 		am -q --all {KEYWORD}
+ 		am -q --appimages {KEYWORD}
+ 		am -q --pkg {PROGRAM1} {PROGRAM2}
+ 		am -q --toolpack {KEYWORD}
+ 		am -r {PROGRAM}
+ 		am -R {PROGRAM}
+ 		am -s
+ 		am -t {PROGRAM}
+ the "am -i '/path/to/script'" command or enter the directory of 
+ the script and run the "am -i ./script" command, even using 
+ 		am -u
+ 		am -u --apps
+ 		am -u --debug
+ 		am -u --apps --debug
+ 		am -u {PROGRAM}
+ 		am -u --debug {PROGRAM}
+ 		am -u --launcher
+ 		am -v
+ 		am --devmode-disable
+ 		am --devmode-enable
+ 		am --disable-notifications
+ 		am --disable-sandbox {PROGRAM}
+ 		am --enable-notifications
+ 		am --force-latest {PROGRAM}
+ 		am --launcher /path/to/${APPIMAGE}
+ 		am --system
+ 		am -i --toolpack {PROGRAM}
+ 		am -i --toolpack --user {PROGRAM}
+ 		am -l --toolpack
+ 		am -q --toolpack {KEYWORD}
+ 		am --user
+ 	am -i --user {PROGRAM}
+ 	am -i --user --debug {PROGRAM}
+ 	am -i --user --force-latest {PROGRAM}
+ 	am -i --user --icons {PROGRAM}
+ 	am -i --user --debug --force-latest {PROGRAM}
+ 	am -i --user --debug --force-latest --icons {PROGRAM}
+ 	am -ia --user {PROGRAM}
+ 	am -ia --user --debug {PROGRAM}
+ 	am -ia --user --force-latest {PROGRAM}
+ 	am -ia --user --icons {PROGRAM}
+ 	am -ia --user --debug --force-latest {PROGRAM}
+ 	am -ia --user --debug --force-latest --icons {PROGRAM}
+ 	am -e --user user/project {APPNAME}
+ 	am -e --user user/project {APPNAME} {KEYWORD}
