@@ -220,8 +220,7 @@ jobs:
       - name: "Show Results 🏁"
         if: always()
         env:
-          fail: $(wc -l < results/failed.list)
-          failed: $(wc -l < failed.list)
+          fail: $fail
         run: |
           echo "DEBUG:"
           echo "fail is $fail"
@@ -234,7 +233,7 @@ jobs:
           echo "### ⭐ $tested tested" >> $GITHUB_STEP_SUMMARY
           echo "## 🛅 $remaining to test" >> $GITHUB_STEP_SUMMARY
           #if [[ -f failed.list ]]; then
-          #failed=$(wc -l < failed.list)
+          failed=$(wc -l < failed.list)
           echo "😱 $failed fails listed" >> $GITHUB_STEP_SUMMARY
           echo ":x: $fail failed now" >> $GITHUB_STEP_SUMMARY
           #fi
