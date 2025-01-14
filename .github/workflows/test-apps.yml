@@ -41,7 +41,7 @@ jobs:
           x64Count=$(find programs/x86_64/ -type f | wc -l)
           i68Count=$(find programs/i686/ -type f | wc -l)
           a64Count=$(find programs/aarch64/ -type f | wc -l)
-          tested=$(wc -l < tested.list)
+          tested=$(wc -l < tested.list) || tested="0"
           echo "### 🎬 apps" >> $GITHUB_STEP_SUMMARY
           echo "$x64Count x86_64" >> $GITHUB_STEP_SUMMARY
           echo "$i68Count i686" >> $GITHUB_STEP_SUMMARY
