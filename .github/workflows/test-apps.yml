@@ -186,8 +186,10 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: "Aggregate Failed Results"
+        env:
+          fail: $(wc -l < results/failed.list)
         run: |
-          for file in results/failed*; do
+          for file in results/failed-*; do
             cat "$file" >> results/failed.list
           done
           echo "DEBUG:"
@@ -203,7 +205,7 @@ jobs:
 
       - name: "Aggregate Succeded Results"
         run: |
-          if [[ -f results/results* ]]; then
+          if [[ -f results/results-* ]]; then
             for file in results/results*; do
               cat "$file" >> aggregated.list
             done
@@ -217,21 +219,25 @@ jobs:
 
       - name: "Show Results 🏁"
         if: always()
+        env:
+          fail: $(wc -l < results/failed.list)
+          failed: $(wc -l < failed.list)
         run: |
           echo "DEBUG:"
           echo "fail is $fail"
           echo "failed is $failed"
+          ls
           echo "DEBUG"
           tested=$(wc -l < tested.list)
           count=$(find programs/x86_64/ -type f | wc -l)
           remaining=$((count - tested))
           echo "### ⭐ $tested tested" >> $GITHUB_STEP_SUMMARY
           echo "## 🛅 $remaining to test" >> $GITHUB_STEP_SUMMARY
-          if [[ -f failed.list ]]; then
-            failed=$(wc -l < failed.list)
-            echo "😱 $failed fails listed" >> $GITHUB_STEP_SUMMARY
-            echo ":x: $fail failed now" >> $GITHUB_STEP_SUMMARY
-          fi
+          #if [[ -f failed.list ]]; then
+          #failed=$(wc -l < failed.list)
+          echo "😱 $failed fails listed" >> $GITHUB_STEP_SUMMARY
+          echo ":x: $fail failed now" >> $GITHUB_STEP_SUMMARY
+          #fi
 
   delete-all-artifacts:
     name: "cleanup 🧹"
