@@ -110,22 +110,22 @@ jobs:
             echo " Structure of the directory in /opt"
             echo ""
             if test -d /opt/kdegames; then
-               ls /opt/kdegames
+               ls /opt/kdegames || echo "${{ matrix.file }}" > results/failed-${{ matrix.file }}
             elif test -d /opt/kdeutils; then
-               ls /opt/kdeutils
+               ls /opt/kdeutils || echo "${{ matrix.file }}" > results/failed-${{ matrix.file }}
             elif test -d /opt/platform-tools; then
-               ls /opt/platform-tools
+               ls /opt/platform-tools || echo "${{ matrix.file }}" > results/failed-${{ matrix.file }}
             elif test -d /opt/"${{ matrix.file }}"; then
-               ls /opt/"${{ matrix.file }}"
+               ls /opt/"${{ matrix.file }}" || echo "${{ matrix.file }}" > results/failed-${{ matrix.file }}
             else
-               ls /opt/"$pure_arg"
+               ls /opt/"$pure_arg" || echo "${{ matrix.file }}" > results/failed-${{ matrix.file }}
             fi
             echo ""
             echo "-------------------------------------------------------------"
             echo ""
             echo " Command in \$PATH"
             echo ""
-            command -v "$pure_arg" || ls /usr/local/bin
+            command -v "$pure_arg" || ls /usr/local/bin || echo "${{ matrix.file }}" > results/failed-${{ matrix.file }}
             echo ""
             echo "-------------------------------------------------------------"
             echo ""
@@ -134,18 +134,18 @@ jobs:
             if test -f /usr/local/share/applications/*AM.desktop 2>/dev/null; then
                ls /usr/local/share/applications | grep "AM.desktop$"
             else
-               ls /usr/local/share/applications
+               ls /usr/local/share/applications || echo "${{ matrix.file }}" > results/failed-${{ matrix.file }}
             fi
             echo ""
             echo "-------------------------------------------------------------"
-            am -R "${{ matrix.file }}" && echo "${{ matrix.file }}" > results/results-${{ matrix.file }}
+            am -R "${{ matrix.file }}" && echo "${{ matrix.file }}" > results/results-${{ matrix.file }} || echo "${{ matrix.file }}" > results/failed-${{ matrix.file }}
             else
               if [[ $? -eq 124 ]]; then
                 echo "### 💥 ${{ matrix.file }} timeout!" >> $GITHUB_STEP_SUMMARY
-                echo "${{ matrix.file }}" >> results/failed-${{ matrix.file }}
+                echo "${{ matrix.file }}" > results/failed-${{ matrix.file }}
               else
                 echo "### 💀 ${{ matrix.file }}" >> $GITHUB_STEP_SUMMARY
-                echo "${{ matrix.file }}" >> results/failed-${{ matrix.file }}
+                echo "${{ matrix.file }}" > results/failed-${{ matrix.file }}
               fi
               exit 1
           fi
