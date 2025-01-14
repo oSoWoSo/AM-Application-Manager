@@ -64,7 +64,7 @@ jobs:
             MATRIX+="{\"file\": \"$file\"},"
           done
           MATRIX="${MATRIX%,}]}"
-          echo "::set-output name=matrix::$MATRIX"
+          echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
 
   run-actions:
     name: "🔨"
