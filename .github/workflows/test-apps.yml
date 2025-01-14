@@ -186,8 +186,6 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: "Aggregate Failed Results"
-        env:
-          fail: $(wc -l < results/failed.list)
         run: |
           for file in results/failed-*; do
             cat "$file" >> results/failed.list
@@ -198,29 +196,21 @@ jobs:
           fail=$(wc -l < results/failed.list)
           cat results/failed.list >> failed.list
           sort -u failed.list -o failed.list
-          git pull --rebase
-          git add failed.list
-          git commit -m "update failed.list"
-          git push
 
       - name: "Aggregate Succeded Results"
         run: |
-          if [[ -f results/results-* ]]; then
-            for file in results/results*; do
-              cat "$file" >> aggregated.list
-            done
-            cat aggregated.list >> tested.list
-            sort -u tested.list -o tested.list
-            git pull --rebase
-            git add tested.list
-            git commit -m "update tested.list"
-            git push
-          fi
+          for file in results/results*; do
+            cat "$file" >> aggregated.list
+          done
+          cat aggregated.list >> tested.list
+          sort -u tested.list -o tested.list
+          git pull --rebase
+          git add tested.list
+          git commit -m "update tested.list"
+          git push
 
       - name: "Show Results 🏁"
         if: always()
-        env:
-          fail: $fail
         run: |
           echo "DEBUG:"
           echo "fail is $fail"
@@ -233,7 +223,8 @@ jobs:
           echo "### ⭐ $tested tested" >> $GITHUB_STEP_SUMMARY
           echo "## 🛅 $remaining to test" >> $GITHUB_STEP_SUMMARY
           #if [[ -f failed.list ]]; then
-          failed=$(wc -l < failed.list)
+          failed=$(wc -l < failed.list) || failed="0"
+          fail=$(wc -l < results/failed.list) || fail="0"
           echo "😱 $failed fails listed" >> $GITHUB_STEP_SUMMARY
           echo ":x: $fail failed now" >> $GITHUB_STEP_SUMMARY
           #fi
