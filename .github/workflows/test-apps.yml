@@ -225,8 +225,8 @@ jobs:
           remaining=$((count - tested))
           echo "### ⭐ $tested tested" >> $GITHUB_STEP_SUMMARY
           echo "## 🛅 $remaining to test" >> $GITHUB_STEP_SUMMARY
-          failed=$(wc -l < failed.list) || failed="0"
-          fail=$(wc -l < results/failed.list) || fail="0"
+          fail=$(wc -l < results/failed.list 2>/dev/null || echo "0")
+          failed=$(wc -l < failed.list 2>/dev/null || echo "0")
           echo "😱 $failed fails listed" >> $GITHUB_STEP_SUMMARY
           echo ":x: $fail failed now" >> $GITHUB_STEP_SUMMARY
 
