@@ -187,23 +187,19 @@ jobs:
 
       - name: "Aggregate Failed Results"
         run: |
-          if [[ -f results/failed* ]]; then
-            for file in results/failed*; do
-              cat "$file" >> results/failed.list
-            done
-            echo "DEBUG:"
-            ls -R results/
-            echo "DEBUG"
-            fail=$(wc -l < results/failed.list)
-            cat results/failed.list >> failed.list
-            sort -u failed.list -o failed.list
-            git pull --rebase
-            git add failed.list
-            git commit -m "update failed.list"
-            git push
-          else
-            fail="0"
-          fi
+          for file in results/failed*; do
+            cat "$file" >> results/failed.list
+          done
+          echo "DEBUG:"
+          ls -R results/            
+          echo "DEBUG"
+          fail=$(wc -l < results/failed.list)
+          cat results/failed.list >> failed.list
+          sort -u failed.list -o failed.list
+          git pull --rebase
+          git add failed.list
+          git commit -m "update failed.list"
+          git push
 
       - name: "Aggregate Succeded Results"
         run: |
