@@ -188,8 +188,8 @@ jobs:
       - name: "Aggregate Succeded Results"
         run: |
           for file in results/results-*; do
-            cat "$file" >> aggregated.list
-          done || exit 0
+            cat "$file" >> aggregated.list 2>/dev/null
+          done
           cat aggregated.list >> tested.list
           sort -u tested.list -o tested.list
           git add tested.list
@@ -197,10 +197,9 @@ jobs:
           git push
 
       - name: "Aggregate Failed Results"
-        if: failure()
         run: |
           for file in results/failed-*; do
-            cat "$file" >> results/failed.list
+            cat "$file" >> results/failed.list 2>/dev/null
           done
           echo "DEBUG:"
           ls -R results/            
