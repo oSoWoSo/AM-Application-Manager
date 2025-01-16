@@ -3,11 +3,13 @@ chrolog
 cider
 dashy-app
 deadbeef-nightly-appimage
+debian-testing-avidemux
 elapp
 eudic
 kvrt
 libfuse2
 microsoft-edge
+node
 npm
 openrct2
 ppsspp
@@ -16,4 +18,5 @@ serialplot
 sioyek
 swift
 urbanterror
+vikunja
 wine
