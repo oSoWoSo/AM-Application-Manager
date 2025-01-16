@@ -1,0 +1,33 @@
+Shell completion has been enabled!
+============================================================================
+
+                  [1;34mSTART OF ALL INSTALLATION PROCESSES[0m
+
+============================================================================
+
+ ◆ "WINE": starting installation script
+
+Select a URL from this menu (read carefully) or press CTRL+C to abort:
+-----------------------------------------------------------------------
+ 1) https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-devel/wine-devel_10.0-rc5-x86_64.AppImage
+ 2) https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-stable/wine-stable_9.0-x86_64.AppImage
+ 3) https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-staging/wine-staging_10.0-rc5-x86_64.AppImage
+ 4) https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-staging_ge_proton/wine-staging_ge-proton_8-26-x86_64.AppImage
+ 5) https://github.com/mmtrt/WINE_AppImage/releases/download/devel-v8/wine-devel_8.21-x86_64.AppImage
+ 6) https://github.com/mmtrt/WINE_AppImage/releases/download/old-v4-i386/wine-stable-i386_4.0.4-x86_64.AppImage
+ 7) https://github.com/mmtrt/WINE_AppImage/releases/download/old-v4-multi/wine-stable-multi_4.0.4-x86_64.AppImage
+ 8) https://github.com/mmtrt/WINE_AppImage/releases/download/stable-v8/wine-stable_8.0.2-x86_64.AppImage
+ 9) https://github.com/mmtrt/WINE_AppImage/releases/download/staging-v8/wine-staging_8.21-x86_64.AppImage
+10) https://github.com/mmtrt/WINE_AppImage/releases/download/test-wineaiso/wine-devel_10.0-rc3-x86_64.AppImage
+#? 
+http://: Invalid host name.
+mv: cannot stat './tmp/*mage': No such file or directory
+chmod: cannot access '/opt/wine/wine': No such file or directory
+
+ 💀 ERROR DURING INSTALLATION, REMOVED "WINE"!
+____________________________________________________________________________
+============================================================================
+
+                  [1;34mEND OF ALL INSTALLATION PROCESSES
+[0m
+============================================================================
