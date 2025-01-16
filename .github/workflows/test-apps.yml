@@ -343,9 +343,9 @@ jobs:
               break
             fi
             for ARTIFACT_ID in $ARTIFACT_IDS; do
-              echo "$ARTIFACT_IDS" | xargs -n 1 -P 5 -I {} \
-               curl -X DELETE -s -H "Authorization: token $TOKEN" \
-               "https://api.github.com/repos/$REPO_NAME/actions/artifacts/{}"
+              echo "Deleting artifact with ID: $ARTIFACT_ID"
+              curl -X DELETE -s -H "Authorization: token $TOKEN" \
+               "https://api.github.com/repos/$REPO_NAME/actions/artifacts/$ARTIFACT_ID"
               ((DELETED+=1))
             done
             ((PAGE+=1))
