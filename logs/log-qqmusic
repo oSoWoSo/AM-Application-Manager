@@ -1,0 +1,23 @@
+Shell completion has been enabled!
+============================================================================
+
+                  [1;34mSTART OF ALL INSTALLATION PROCESSES[0m
+
+============================================================================
+
+ ◆ "QQMUSIC": starting installation script
+
+--2025-01-16 09:40:55--  https://dldir1.qq.com/music/clntupate/linux/AppImage/qqmusic-1.1.7.AppImage
+Resolving dldir1.qq.com (dldir1.qq.com)... 43.152.15.39, 43.152.14.43
+Connecting to dldir1.qq.com (dldir1.qq.com)|43.152.15.39|:443... connected.
+HTTP request sent, awaiting response... 404 Not Found
+2025-01-16 09:40:57 ERROR 404: Not Found.
+
+
+ 💀 ERROR DURING INSTALLATION, REMOVED "QQMUSIC"!
+____________________________________________________________________________
+============================================================================
+
+                  [1;34mEND OF ALL INSTALLATION PROCESSES
+[0m
+============================================================================
